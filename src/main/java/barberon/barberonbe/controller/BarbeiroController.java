@@ -9,7 +9,7 @@ import barberon.barberonbe.repository.BarbeiroRepository;
 import java.util.List;
 
 @RestController
-@RequestMapping("/barbeiro")
+@RequestMapping("/barber")
 public class BarbeiroController {
 
     @Autowired

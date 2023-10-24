@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "barbeiro")
-@Table(name = "barbeiro")
+@Entity(name = "barberOn")
+@Table(name = "barbeiro",schema = "public")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

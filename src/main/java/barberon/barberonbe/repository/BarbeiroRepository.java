@@ -1,13 +1,7 @@
 package barberon.barberonbe.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import barberon.barberonbe.model.Barbeiro;
-import org.springframework.stereotype.Repository;
-
-
-@Repository
+import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface BarbeiroRepository extends JpaRepository<Barbeiro, Long> {
-
-
 }

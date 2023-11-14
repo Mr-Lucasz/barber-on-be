@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
 @RestController
-@RequestMapping("/barber")
+@RequestMapping("/api/barber")
 public class BarbeiroController {
 
     @Autowired

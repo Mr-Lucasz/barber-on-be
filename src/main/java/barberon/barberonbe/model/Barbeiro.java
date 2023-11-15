@@ -1,7 +1,9 @@
 package barberon.barberonbe.model;
 
-import java.util.Date;
 
+import java.sql.Date;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,14 +12,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Entity(name = "barberOn")
+@Entity
 @Table(name = "barbeiro", schema = "public")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
@@ -28,12 +33,14 @@ public class Barbeiro {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "barbearia_id", nullable = false)
+    @JoinColumn(name = "barbeariaId", nullable = false)
     private Barbearia barbearia;
 
     @Column(nullable = false)
+    @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @Column(nullable = false)
     private Date dataNascimento;
 
@@ -44,11 +51,13 @@ public class Barbeiro {
     private String telefone;
 
     @Column(nullable = false)
+    @NotBlank(message = "Email é obrigatório")
     private String email;
 
     @Column(nullable = false)
     private String senha;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double mediaAvaliacao;
+
 }

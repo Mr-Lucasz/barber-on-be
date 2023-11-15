@@ -31,5 +31,10 @@ public class AgendaService {
         return agendaRepository.findById(id).orElse(null);
     }
 
+    public Agenda getAgendaByBarbeiroId(Long barbeiroId) {
+        return agendaRepository.findByBarbeiro_Id(barbeiroId).orElse(null);
+    }
+    
+
     // Add more methods as needed
 }

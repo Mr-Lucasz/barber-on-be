@@ -17,12 +17,12 @@ import jakarta.persistence.JoinColumn;
 
 
 
-@Entity
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
+@Entity
 @Table(name = "pausa")
 public class Pausa {
 

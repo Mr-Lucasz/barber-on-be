@@ -15,6 +15,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
 
 @Entity
 @Getter
@@ -27,8 +29,9 @@ public class Agenda {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long agendaId;
 
-    @Column(nullable = false)
-    private Integer agendaBarbeiroId;
+    @ManyToOne
+    @JoinColumn(name = "agendaBarbeiroId", nullable = false)
+    private Barbeiro barbeiro;
 
     @Column(nullable = false)
     private Integer agendaDiaSemana;
@@ -41,7 +44,4 @@ public class Agenda {
 
     @OneToMany(mappedBy = "agenda", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Pausa> pausas;
-
-    
-
 }

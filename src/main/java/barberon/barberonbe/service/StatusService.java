@@ -28,8 +28,8 @@ public class StatusService {
    
     //edite status
     public Status updateStatus(Status status) {
-        Status existingStatus = statusRepository.findById(status.getStatusId()).orElse(null);
-        existingStatus.setStatusId(status.getStatusId());
+        Status existingStatus = statusRepository.findById(status.getId()).orElse(null);
+        existingStatus.setId(status.getId());
         existingStatus.setStatusNome(status.getStatusNome());
         return statusRepository.save(existingStatus);
     }

@@ -14,7 +14,6 @@ import jakarta.persistence.GenerationType;
 import java.util.List;
 
 @Entity
-@Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor

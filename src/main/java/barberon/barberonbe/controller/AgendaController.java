@@ -27,22 +27,22 @@ public class AgendaController {
         return agendaService.getAllAgendas();
     }
 
-    @PutMapping("/{id}")
-public ResponseEntity<Agenda> updateAgenda(@PathVariable Long id, @RequestBody Agenda updatedAgenda) {
-    Agenda agenda = agendaService.getAgendaById(id);
-    if (agenda == null) {
-        return ResponseEntity.notFound().build();
+    @PutMapping("/barbeiro/{barbeiroId}")
+    public ResponseEntity<Agenda> updateAgenda(@PathVariable Long barbeiroId, @RequestBody Agenda updatedAgenda) {
+        Agenda agenda = agendaService.getAgendaByBarbeiroId(barbeiroId);
+        if (agenda == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        // Atualizar campos da agenda
+        agenda.setAgendaDiaSemana(updatedAgenda.getAgendaDiaSemana());
+
+        // Atualizar pausas
+        agenda.getPausas().clear();
+        agenda.getPausas().addAll(updatedAgenda.getPausas());
+        updatedAgenda.getPausas().forEach(pausa -> pausa.setAgenda(agenda));
+
+        Agenda savedAgenda = agendaService.saveAgenda(agenda);
+        return ResponseEntity.ok(savedAgenda);
     }
-
-    // Atualizar campos da agenda
-    agenda.setAgendaDiaSemana(updatedAgenda.getAgendaDiaSemana());
-
-    // Atualizar pausas
-    agenda.getPausas().clear();
-    agenda.getPausas().addAll(updatedAgenda.getPausas());
-    updatedAgenda.getPausas().forEach(pausa -> pausa.setAgenda(agenda));
-
-    Agenda savedAgenda = agendaService.saveAgenda(agenda);
-    return ResponseEntity.ok(savedAgenda);
-}
 }

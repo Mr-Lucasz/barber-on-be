@@ -1,0 +1,15 @@
+POST http://localhost:8080/api/barbearias
+Content-Type: application/json
+Authorization: Basic dXNlcjo3OTE2NTgyYi1mODI5LTRlMGYtODY2NC1mM2JkOTI1MDcxMjY=
+
+{
+  "barbeariaNome": "Barbearia do João",
+  "barbeariaDescricao": "Barbearia tradicional com cortes modernos",
+  "barbeariaCNPJ": "00.000.000/0001-00",
+  "barbeariaEnderecoCEP": "12345-678",
+  "barbeariaEnderecoCidade": "São Paulo",
+  "barbeariaEnderecoRua": "Rua das Flores",
+  "barbeariaEnderecoBairro": "Centro",
+  "barbeariaEnderecoNumero": "123",
+  "barbeariaMediaAvaliacao": 4.5
+}

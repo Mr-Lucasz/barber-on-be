@@ -9,5 +9,6 @@ class BarberOnApplicationTests {
 	@Test
 	void contextLoads() {
 	}
+	
 
 }

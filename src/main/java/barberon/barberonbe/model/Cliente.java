@@ -1,9 +1,6 @@
 package barberon.barberonbe.model;
 
-
-import java.sql.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.Date; 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,27 +17,24 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "barbeiro", schema = "public")
+@Table(name = "cliente", schema = "public")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 
-public class Barbeiro {
+
+public class Cliente {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @ManyToOne
-    @JoinColumn(name = "barbeariaId", nullable = false)
-    private Barbearia barbearia;
 
     @Column(nullable = false)
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @Column(nullable = false)
     private Date dataNascimento;
 
@@ -53,11 +47,9 @@ public class Barbeiro {
     @Column(nullable = false)
     @NotBlank(message = "Email é obrigatório")
     private String email;
-
+    
     @Column(nullable = false)
     private String senha;
 
-    @Column(nullable = true)
-    private Double mediaAvaliacao;
-
 }
+

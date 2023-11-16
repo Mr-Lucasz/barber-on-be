@@ -1,10 +1,6 @@
 package barberon.barberonbe.service;
-
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import barberon.barberonbe.model.Status;
 import barberon.barberonbe.repository.StatusRepository;
 
@@ -12,7 +8,7 @@ import barberon.barberonbe.repository.StatusRepository;
 public class StatusService {
     private final StatusRepository statusRepository;
 
-    @Autowired
+
     public StatusService(StatusRepository statusRepository) {
         this.statusRepository = statusRepository;
     }

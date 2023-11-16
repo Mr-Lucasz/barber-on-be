@@ -1,10 +1,7 @@
 package barberon.barberonbe.service;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import barberon.barberonbe.model.Pausa;
 import barberon.barberonbe.repository.PausaRepository;
 
@@ -12,7 +9,7 @@ import barberon.barberonbe.repository.PausaRepository;
 public class PausaService {
     private final PausaRepository pausaRepository;
 
-    @Autowired
+
     public PausaService(PausaRepository pausaRepository) {
         this.pausaRepository = pausaRepository;
     }

@@ -8,40 +8,41 @@ import barberon.barberonbe.Exception.GlobalExceptionHandler;
 import barberon.barberonbe.model.Barbeiro;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
+import barberon.barberonbe.repository.BarbeariaRepository;
 import barberon.barberonbe.repository.BarbeiroRepository;
+import barberon.barberonbe.service.BarbeiroService;
+
 import java.util.List;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 
-
 @RestController
-@RequestMapping("/api/barber")
+     @CrossOrigin(origins = "http://localhost:4000")
+@RequestMapping("/api/barbeiros")
 public class BarbeiroController {
 
-    
     @Autowired
-    private BarbeiroRepository repository;
+    private BarbeiroService barbeiroService;
 
     @PostMapping
     public Barbeiro save(@RequestBody Barbeiro barbeiro) {
-        return barbeiro;
+        return barbeiroService.save(barbeiro);
     }
 
     @GetMapping
-    public List<Barbeiro> getAll() {
-        List<Barbeiro> barbeiroList = repository.findAll();
-        return barbeiroList;
+    public List<Barbeiro> findAll() {
+        return barbeiroService.findAll();
     }
 
     @GetMapping("/{id}")
     public Barbeiro getById(@PathVariable long id) {
-        return repository.findById(id).orElse(null);
-        
+        return barbeiroService.findById(id);
     }
-
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {
-        repository.deleteById(id);
+        barbeiroService.deleteById(id);
     }
 
 }

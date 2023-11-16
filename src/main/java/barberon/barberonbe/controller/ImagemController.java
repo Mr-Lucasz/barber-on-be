@@ -4,8 +4,11 @@ import barberon.barberonbe.model.Imagem;
 import barberon.barberonbe.service.ImagemService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -21,7 +24,9 @@ public class ImagemController {
         return imagemService.getAllImagens();
     }
 
-    // Adicione mais endpoints conforme necessário, por exemplo, para criar, atualizar e deletar imagens
+    @PostMapping("/upload")
+    public Imagem uploadImage(@RequestParam("image") MultipartFile image, @RequestParam("barbeiroId") Long barbeiroId) {
+        return imagemService.save(image, barbeiroId);
+    }
 
-    
 }

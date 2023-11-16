@@ -31,7 +31,7 @@ public class Barbeiro {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
+    
     @ManyToOne
     @JoinColumn(name = "barbeariaId", nullable = false)
     private Barbearia barbearia;
@@ -40,7 +40,7 @@ public class Barbeiro {
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(nullable = false)
     private Date dataNascimento;
 

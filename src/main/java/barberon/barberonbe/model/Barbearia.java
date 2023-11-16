@@ -13,8 +13,11 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Setter
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 
@@ -23,7 +26,6 @@ public class Barbearia {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long barbeariaId;
-
     @Column(nullable = false)
     private String barbeariaNome;
     @Column(nullable = false)
@@ -44,7 +46,9 @@ public class Barbearia {
     private Double barbeariaMediaAvaliacao;
 
     @OneToMany(mappedBy = "barbearia")
+    @JsonIgnore
     private List<Barbeiro> barbeiros;
     @OneToMany(mappedBy = "barbearia")
+    @JsonIgnore
     private List<Imagem> imagens;
 }

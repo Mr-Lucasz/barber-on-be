@@ -49,7 +49,7 @@ public class Agenda {
     @OneToMany(mappedBy = "agenda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Pausa> pausas;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "agenda_status", joinColumns = @JoinColumn(name = "agenda_id"), inverseJoinColumns = @JoinColumn(name = "status_id"))
-    private List<Status> status;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "status_id")
+    private Status status;
 }

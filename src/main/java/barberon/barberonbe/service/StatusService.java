@@ -29,4 +29,8 @@ public class StatusService {
         existingStatus.setStatusNome(status.getStatusNome());
         return statusRepository.save(existingStatus);
     }
+
+    public Status getStatusById(Long id) {
+        return statusRepository.findById(id).orElse(null);
+    }
 }

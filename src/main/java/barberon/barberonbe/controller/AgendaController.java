@@ -5,11 +5,12 @@ import barberon.barberonbe.DTO.BarbeiroAgendasDTO;
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.service.AgendaService;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
+
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,11 +24,15 @@ public class AgendaController {
         this.agendaService = agendaService;
     }
 
-    @PostMapping("/{agendaBarbeiroId}")
-    public List<Agenda> createAgenda(@PathVariable Long agendaBarbeiroId, @RequestBody List<Agenda> agendas) {
-        return agendas.stream()
-                .map(agenda -> agendaService.saveAgendaBarber(agendaBarbeiroId, agenda))
-                .collect(Collectors.toList());
+    @PostMapping("/barbeiro/{barbeiroId}/bulk")
+    public ResponseEntity<List<AgendaDTO>> createAgendas(@PathVariable Long barbeiroId,
+            @RequestBody List<Agenda> newAgendas) {
+        List<AgendaDTO> agendas = agendaService.saveAgendaBarber(barbeiroId, newAgendas);
+        if (agendas.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.CREATED).body(agendas);
+        }
     }
 
     @GetMapping("/with-barbeiros")
@@ -36,7 +41,7 @@ public class AgendaController {
     }
 
     @GetMapping
-    public List<Agenda> getAllAgendas() {
+    public List<AgendaDTO> getAllAgendas() {
         return agendaService.getAllAgendas();
     }
 
@@ -46,14 +51,18 @@ public class AgendaController {
         if (agenda == null) {
             return ResponseEntity.notFound().build();
         }
-        // Atualizar campos da agenda
+        // Update agenda fields and status
         agenda.setAgendaDiaSemana(updatedAgenda.getAgendaDiaSemana());
-        // Atualizar pausas
+        agenda.setStatus(updatedAgenda.getStatus()); // Add this line
+
+        // Update breaks
         agenda.getPausas().clear();
         agenda.getPausas().addAll(updatedAgenda.getPausas());
         updatedAgenda.getPausas().forEach(pausa -> pausa.setAgenda(agenda));
 
-        Agenda savedAgenda = agendaService.saveAgendaBarber(barbeiroId, agenda);
+        // Wrap the agenda in a list before saving
+        List<AgendaDTO> savedAgendas = agendaService.saveAgendaBarber(barbeiroId, Arrays.asList(agenda));
+        Agenda savedAgenda = savedAgendas.isEmpty() ? null : savedAgendas.get(0);
         return ResponseEntity.ok(savedAgenda);
     }
 

@@ -3,7 +3,7 @@ package barberon.barberonbe.service;
 import org.springframework.stereotype.Service;
 
 import barberon.barberonbe.DTO.AgendaDTO;
-import barberon.barberonbe.DTO.BarbeiroAgendasDTO;
+import barberon.barberonbe.DTO.BarbeiroDTO;
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Barbeiro;
 import barberon.barberonbe.model.Status;
@@ -73,14 +73,14 @@ public class AgendaService {
         return dto;
     }
 
-    public BarbeiroAgendasDTO getAgendasByBarbeiroId(Long barbeiroId) {
+    public BarbeiroDTO getAgendasByBarbeiroId(Long barbeiroId) {
         List<Agenda> agendas = agendaRepository.findByBarbeiro_Id(barbeiroId);
         List<AgendaDTO> agendaDTOs = agendas.stream()
                 .map(this::convertToAgendaDTO)
                 .collect(Collectors.toList());
 
-        BarbeiroAgendasDTO barbeiroAgendasDTO = new BarbeiroAgendasDTO();
-        barbeiroAgendasDTO.setBarbeiroId(barbeiroId);
+        BarbeiroDTO barbeiroAgendasDTO = new BarbeiroDTO();
+        barbeiroAgendasDTO.setBarbeariaId(barbeiroId);
         barbeiroAgendasDTO.setAgendas(agendaDTOs);
         return barbeiroAgendasDTO;
     }

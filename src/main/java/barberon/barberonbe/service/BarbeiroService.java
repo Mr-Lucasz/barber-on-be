@@ -1,17 +1,23 @@
 package barberon.barberonbe.service;
 
-import barberon.barberonbe.Exception.GlobalExceptionHandler;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import barberon.barberonbe.DTO.AgendaDTO;
+import barberon.barberonbe.DTO.BarbeiroDTO;
+import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Barbearia;
 import barberon.barberonbe.model.Barbeiro;
 import barberon.barberonbe.repository.BarbeariaRepository;
 import barberon.barberonbe.repository.BarbeiroRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import lombok.extern.java.Log;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BarbeiroService {
+
     @Autowired
     private BarbeiroRepository repository;
 
@@ -26,36 +32,49 @@ public class BarbeiroService {
         return repository.findById(id).orElse(null);
     }
 
-    public Barbeiro save(Barbeiro barbeiro) {
-        Long barbeariaId = 52L;
-        Barbearia barbearia = barbeariaRepository.findById(barbeariaId)
-            .orElseThrow(() -> new RuntimeException("Barbearia com id " + barbeariaId + " não encontrada"));
-    
-        validateBarbeiro(barbeiro);
-        barbeiro.setBarbearia(barbearia);
-            
-        return repository.save(barbeiro);
-    }
-
     public void deleteById(long id) {
         repository.deleteById(id);
     }
 
-    public void updateMediaAvaliacao(Long id, Double novaAvaliacao) {
-        Barbeiro barbeiro = repository.findById(id).orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
-        Double mediaAvaliacaoAtual = barbeiro.getMediaAvaliacao();
-        Double novaMediaAvaliacao = (mediaAvaliacaoAtual + novaAvaliacao) / 2;
-        barbeiro.setMediaAvaliacao(novaMediaAvaliacao);
-        repository.save(barbeiro);
+    public BarbeiroDTO save(Barbeiro barbeiro) {
+        Long barbeariaId = 1L;
+        Barbearia barbearia = barbeariaRepository.findById(barbeariaId)
+                .orElseThrow(() -> new RuntimeException("Barbearia com id " + barbeariaId + " não encontrada"));
+        barbeiro.setBarbearia(barbearia);
+        Barbeiro savedBarbeiro = repository.save(barbeiro);
+        return convertToDTO(savedBarbeiro);
     }
 
-    public void validateBarbeiro(Barbeiro barbeiro) {
-        if (barbeiro.getNome() == null || barbeiro.getNome().isEmpty()) {
-            throw new RuntimeException("Nome do barbeiro não pode ser vazio");
+    private BarbeiroDTO convertToDTO(Barbeiro barbeiro) {
+        BarbeiroDTO dto = new BarbeiroDTO();
+        if (barbeiro.getImagem() != null) {
+            Long imagemId = barbeiro.getImagem().getImagemId();
+            dto.setImagemId(imagemId);
         }
-        if (barbeiro.getMediaAvaliacao() != null && (barbeiro.getMediaAvaliacao() < 0 || barbeiro.getMediaAvaliacao() > 5)) {
-            throw new RuntimeException("Média de avaliação do barbeiro deve estar entre 0 e 5");
-        }
-     }
-     
+
+        dto.setId(barbeiro.getId());
+        dto.setBarbeariaId(barbeiro.getBarbearia().getBarbeariaId());
+        dto.setNome(barbeiro.getNome());
+        dto.setDataNascimento(barbeiro.getDataNascimento());
+        dto.setCpf(barbeiro.getCpf());
+        dto.setTelefone(barbeiro.getTelefone());
+        dto.setEmail(barbeiro.getEmail());
+        dto.setSenha(barbeiro.getSenha());
+        dto.setMediaAvaliacao(barbeiro.getMediaAvaliacao());
+        List<AgendaDTO> agendaDTOs = barbeiro.getAgendas().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        dto.setAgendas(agendaDTOs);
+        return dto;
+    }
+
+    private AgendaDTO convertToDTO(Agenda agenda) {
+        AgendaDTO dto = new AgendaDTO();
+        dto.setAgendaId(agenda.getAgendaId());
+        dto.setAgendaDiaSemana(agenda.getAgendaDiaSemana());
+        dto.setStatusNome(agenda.getStatus().getStatusNome());
+        dto.setPausas(agenda.getPausas());
+        return dto;
+    }
+
 }

@@ -34,7 +34,7 @@ public class Agenda {
     private Long agendaId;
 
     @ManyToOne
-    @JoinColumn(name = "agendaBarbeiroId", nullable = false)
+    @JoinColumn(name = "barbeiro_id", nullable = false)
     private Barbeiro barbeiro;
 
     @Column(nullable = false)

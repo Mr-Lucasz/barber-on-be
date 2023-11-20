@@ -13,6 +13,7 @@ import barberon.barberonbe.repository.BarbeiroRepository;
 import lombok.extern.java.Log;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service

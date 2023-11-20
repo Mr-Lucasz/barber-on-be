@@ -1,18 +1,21 @@
 package barberon.barberonbe.controller;
 
 import org.springframework.web.bind.annotation.RestController;
-
+import java.util.List;
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.service.AgendaService;
+import barberon.barberonbe.service.BarbeiroService;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:4000")
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class AgendaController {
 
     private final AgendaService agendaService;
+
 
     public AgendaController(AgendaService agendaService) {
         this.agendaService = agendaService;
@@ -46,8 +50,6 @@ public class AgendaController {
         return ResponseEntity.ok(agendaService.findByBarbeiro(id));
     }
 
-    @PutMapping("/agendas/{id}")
-    public Agenda updateAgenda(@PathVariable Long id, @RequestBody Agenda newAgenda) {
-        return agendaService.updateAgenda(id, newAgenda);
-    }
+
+
 }

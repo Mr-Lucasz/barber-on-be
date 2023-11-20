@@ -2,6 +2,7 @@ package barberon.barberonbe.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import barberon.barberonbe.DTO.BarbeiroDTO;
@@ -18,8 +19,6 @@ import java.util.List;
 public class BarbeiroController {
     @Autowired
     private BarbeiroService barbeiroService;
-
-
 
     @PostMapping
     public BarbeiroDTO save(@RequestBody Barbeiro barbeiro) {
@@ -40,8 +39,6 @@ public class BarbeiroController {
     public void deleteById(@PathVariable long id) {
         barbeiroService.deleteById(id);
     }
-
- 
 
 
 

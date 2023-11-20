@@ -23,10 +23,24 @@ public class BarbeiroService {
 
     @Autowired
     private BarbeariaRepository barbeariaRepository;
-
-    public List<Barbeiro> findAll() {
-        return repository.findAll();
+    
+    public List<BarbeiroDTO> findAllBarbeirosWithAgendas() {
+        List<Barbeiro> barbeiros = repository.findAll();
+        return barbeiros.stream()
+                .map(this::convertToDTOWithAgendas)
+                .collect(Collectors.toList());
     }
+
+    private BarbeiroDTO convertToDTOWithAgendas(Barbeiro barbeiro) {
+        BarbeiroDTO dto = convertToDTO(barbeiro); 
+        barbeiro.getAgendas().size(); 
+        List<AgendaDTO> agendaDTOs = barbeiro.getAgendas().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        dto.setAgendas(agendaDTOs);
+        return dto;
+    }
+    
 
     public Barbeiro findById(long id) {
         return repository.findById(id).orElse(null);

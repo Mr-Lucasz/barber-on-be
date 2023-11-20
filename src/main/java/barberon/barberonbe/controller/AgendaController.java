@@ -1,79 +1,53 @@
 package barberon.barberonbe.controller;
 
-import barberon.barberonbe.DTO.AgendaDTO;
-// import barberon.barberonbe.DTO.BarbeiroAgendasDTO;
+import org.springframework.web.bind.annotation.RestController;
+
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.service.AgendaService;
 
-import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.bind.annotation.*;
-
-// import java.util.Arrays;
-import java.util.List;
-// import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 
 @RestController
-@RequestMapping("/api/agendas")
 @CrossOrigin(origins = "http://localhost:4000")
+@RequestMapping("/api/agendas")
 public class AgendaController {
+
     private final AgendaService agendaService;
 
     public AgendaController(AgendaService agendaService) {
         this.agendaService = agendaService;
     }
 
-    @PostMapping("/barbeiro/{barbeiroId}/bulk")
-    public ResponseEntity<List<AgendaDTO>> createAgendas(@PathVariable Long barbeiroId,
-            @RequestBody List<Agenda> newAgendas) {
-        List<AgendaDTO> agendas = agendaService.saveAgendaBarber(barbeiroId, newAgendas);
-        if (agendas.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.status(HttpStatus.CREATED).body(agendas);
-        }
-    }
-
-    @GetMapping("/with-barbeiros")
-    public List<AgendaDTO> getAllAgendasWithBarbeiros() {
-        return agendaService.getAllAgendasWithBarbeiros();
-    }
-
     @GetMapping
-    public List<AgendaDTO> getAllAgendas() {
-        return agendaService.getAllAgendas();
+    public ResponseEntity<Iterable<Agenda>> getAgendas() {
+        return ResponseEntity.ok(agendaService.findAll());
     }
 
-    // @PutMapping("/barbeiro/{barbeiroId}")
-    // public ResponseEntity<Agenda> updateAgenda(@PathVariable Long barbeiroId, @RequestBody Agenda updatedAgenda) {
-    //     Agenda agenda = agendaService.getAgendaByBarbeiroId(barbeiroId);
-    //     if (agenda == null) {
-    //         return ResponseEntity.notFound().build();
-    //     }
-    //     // Update agenda fields and status
-    //     agenda.setAgendaDiaSemana(updatedAgenda.getAgendaDiaSemana());
-    //     agenda.setStatus(updatedAgenda.getStatus()); // Add this line
-
-    //     // Update breaks
-    //     agenda.getPausas().clear();
-    //     agenda.getPausas().addAll(updatedAgenda.getPausas());
-    //     updatedAgenda.getPausas().forEach(pausa -> pausa.setAgenda(agenda));
-
-    //     // Wrap the agenda in a list before saving
-    //     List<AgendaDTO> savedAgendas = agendaService.saveAgendaBarber(barbeiroId, Arrays.asList(agenda));
-    //     Agenda savedAgenda = savedAgendas.isEmpty() ? null : savedAgendas.get(0);
-    //     return ResponseEntity.ok(savedAgenda);
-    // }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handleException(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+    @PostMapping
+    public ResponseEntity<Agenda> createAgenda(@RequestBody Agenda agenda) {
+        return ResponseEntity.ok(agendaService.save(agenda));
     }
 
-    // @GetMapping("/barbeiro/{barbeiroId}")
-    // public BarbeiroAgendasDTO getAgendasByBarbeiroId(@PathVariable Long barbeiroId) {
-    //     return agendaService.getAgendasByBarbeiroId(barbeiroId);
-    // }
+    @GetMapping("/{id}")
+    public ResponseEntity<Agenda> getAgenda(@PathVariable Long id) {
+        return ResponseEntity.ok(agendaService.findById(id));
+    }
 
+    // Get Agendas Barbeiro
+    @GetMapping("/barbeiro/{id}")
+    public ResponseEntity<Iterable<Agenda>> getAgendasBarbeiro(@PathVariable Long id) {
+        return ResponseEntity.ok(agendaService.findByBarbeiro(id));
+    }
+
+    @PutMapping("/agendas/{id}")
+    public Agenda updateAgenda(@PathVariable Long id, @RequestBody Agenda newAgenda) {
+        return agendaService.updateAgenda(id, newAgenda);
+    }
 }

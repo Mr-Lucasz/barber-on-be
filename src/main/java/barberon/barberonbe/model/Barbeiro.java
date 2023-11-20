@@ -67,8 +67,9 @@ public class Barbeiro {
     @Column(nullable = false)
     private Double mediaAvaliacao;
 
-    @OneToMany(mappedBy = "barbeiro")
+    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER)
     private List<Agenda> agendas = new ArrayList<>();
+    
 
     @OneToMany(mappedBy = "barbeiro")
     private List<Servico> servicos = new ArrayList<>();

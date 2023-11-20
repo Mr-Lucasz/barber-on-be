@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AgendaRepository extends JpaRepository<Agenda, Long> {
-    List<Agenda> findByBarbeiro_Id(Long barbeiroId);
+    List<Agenda> findByBarbeiroId(Long barbeiroId);
 }

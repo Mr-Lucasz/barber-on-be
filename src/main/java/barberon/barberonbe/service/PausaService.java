@@ -44,8 +44,5 @@ public class PausaService {
         return pausaRepository.save(existingPausa);
     }
 
-    public Pausa getPausaByAgendaId(Long agendaId) {
-        return pausaRepository.findByAgendaId(agendaId);
-    }
 
 }

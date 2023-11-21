@@ -54,9 +54,6 @@ public class PausaController {
         return pausaService.savePausaList(pausaList);
     }
 
-    @PatchMapping
-    public Pausa updatePausa(@RequestBody PausaDTO pausaDTO) {
-        return pausaService.updatePausa(pausaDTO);
-    }
+
 
 }

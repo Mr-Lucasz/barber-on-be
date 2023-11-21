@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 
 public interface PausaRepository extends JpaRepository<Pausa, Long> {
-    Pausa findByAgendaId(Long agendaId);
+
 }

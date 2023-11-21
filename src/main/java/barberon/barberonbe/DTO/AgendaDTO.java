@@ -21,4 +21,5 @@ public class AgendaDTO {
     private LocalTime agendaHorarioFim;
     private List<Pausa> pausas;
     private String statusNome; 
+    private Long statusId;
 }

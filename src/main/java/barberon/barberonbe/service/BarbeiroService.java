@@ -5,15 +5,15 @@ import org.springframework.stereotype.Service;
 
 import barberon.barberonbe.DTO.AgendaDTO;
 import barberon.barberonbe.DTO.BarbeiroDTO;
+import barberon.barberonbe.DTO.ServicoDTO;
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Barbearia;
 import barberon.barberonbe.model.Barbeiro;
+import barberon.barberonbe.model.Servico;
 import barberon.barberonbe.repository.BarbeariaRepository;
 import barberon.barberonbe.repository.BarbeiroRepository;
-import lombok.extern.java.Log;
-
+import jakarta.transaction.Transactional;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,7 +24,8 @@ public class BarbeiroService {
 
     @Autowired
     private BarbeariaRepository barbeariaRepository;
-    
+
+    @Transactional
     public List<BarbeiroDTO> findAllBarbeirosWithAgendas() {
         List<Barbeiro> barbeiros = repository.findAll();
         return barbeiros.stream()
@@ -33,15 +34,14 @@ public class BarbeiroService {
     }
 
     private BarbeiroDTO convertToDTOWithAgendas(Barbeiro barbeiro) {
-        BarbeiroDTO dto = convertToDTO(barbeiro); 
-        barbeiro.getAgendas().size(); 
+        BarbeiroDTO dto = convertToDTO(barbeiro);
+        barbeiro.getAgendas().size();
         List<AgendaDTO> agendaDTOs = barbeiro.getAgendas().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
         dto.setAgendas(agendaDTOs);
         return dto;
     }
-    
 
     public Barbeiro findById(long id) {
         return repository.findById(id).orElse(null);
@@ -80,6 +80,10 @@ public class BarbeiroService {
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
         dto.setAgendas(agendaDTOs);
+        List<ServicoDTO> servicoDTOs = barbeiro.getServicos().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        dto.setServicos(servicoDTOs);
         return dto;
     }
 
@@ -88,7 +92,20 @@ public class BarbeiroService {
         dto.setAgendaId(agenda.getAgendaId());
         dto.setAgendaDiaSemana(agenda.getAgendaDiaSemana());
         dto.setStatusNome(agenda.getStatus().getStatusNome());
+        dto.setStatusId(agenda.getStatus().getId());
+        dto.setAgendaHorarioInicio(agenda.getAgendaHorarioInicio());
+        dto.setAgendaHorarioFim(agenda.getAgendaHorarioFim());
         dto.setPausas(agenda.getPausas());
+        return dto;
+    }
+
+    private ServicoDTO convertToDTO(Servico servico) {
+        ServicoDTO dto = new ServicoDTO();
+        dto.setServicoId(servico.getServicoId());
+        dto.setServicoNome(servico.getServicoTitulo());
+        dto.setServicoDescricao(servico.getServicoDescricao());
+        dto.setServicoValor(servico.getServicoValor());
+        dto.setServicoDuracao(servico.getServicoTempoMinuto().intValue());
         return dto;
     }
 

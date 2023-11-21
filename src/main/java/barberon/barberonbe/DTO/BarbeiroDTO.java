@@ -27,7 +27,7 @@ public class BarbeiroDTO {
     private String senha;
     private Double mediaAvaliacao;
     private List<AgendaDTO> agendas;
-    private List<Servico> servicos;
+    private List<ServicoDTO> servicos;
     private Long imagemId;
 
 }

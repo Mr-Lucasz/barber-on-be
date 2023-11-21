@@ -33,7 +33,7 @@ public class Agenda {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="barbeiro_id")
+    @JoinColumn(name = "barbeiro_id")
     private Barbeiro barbeiro;
 
     @Column(nullable = false)
@@ -47,9 +47,8 @@ public class Agenda {
 
     @OneToMany(mappedBy = "agenda", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Pausa> pausas;
-    
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.ALL)
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "status_id")
     private Status status;
 }

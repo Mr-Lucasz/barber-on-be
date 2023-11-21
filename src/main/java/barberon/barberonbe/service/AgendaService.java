@@ -14,6 +14,7 @@ import barberon.barberonbe.repository.BarbeiroRepository;
 import barberon.barberonbe.repository.StatusRepository;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AgendaService {
@@ -37,12 +38,12 @@ public class AgendaService {
         for (AgendaDTO agendaDTO : agendasDTO) {
             Status status = statusRepository.findById(agendaDTO.getStatusId())
                     .orElseThrow(() -> new RuntimeException("Status não encontrado"));
-    
+
             Agenda newAgenda = new Agenda();
             newAgenda.setAgendaDiaSemana(agendaDTO.getAgendaDiaSemana());
             newAgenda.setAgendaHorarioInicio(agendaDTO.getAgendaHorarioInicio());
             newAgenda.setAgendaHorarioFim(agendaDTO.getAgendaHorarioFim());
-    
+
             // Converte a lista de PausaDTO em uma lista de Pausa
             List<Pausa> pausas = new ArrayList<>();
             for (PausaDTO pausaDTO : agendaDTO.getPausas()) {
@@ -54,10 +55,10 @@ public class AgendaService {
                 pausas.add(pausa);
             }
             newAgenda.setPausas(pausas);
-    
+
             newAgenda.setBarbeiro(barbeiro);
             newAgenda.setStatus(status);
-    
+
             newAgendas.add(agendaRepository.save(newAgenda));
         }
         return newAgendas;
@@ -67,7 +68,7 @@ public class AgendaService {
     public Agenda updateAgenda(Long agendaId, AgendaDTO agendaDTO) {
         Agenda agenda = agendaRepository.findById(agendaId)
                 .orElseThrow(() -> new RuntimeException("Agenda não encontrada"));
-    
+
         if (agendaDTO.getAgendaDiaSemana() != null) {
             agenda.setAgendaDiaSemana(agendaDTO.getAgendaDiaSemana());
         }
@@ -82,25 +83,51 @@ public class AgendaService {
                     .orElseThrow(() -> new RuntimeException("Status não encontrado"));
             agenda.setStatus(status);
         }
-    
+        // Get the current list of pauses
+        List<Pausa> currentPausas = agenda.getPausas();
+
+        // Convert the list of PausaDTO to a list of Pausa ids
+        List<Long> providedPausaIds = agendaDTO.getPausas().stream()
+                .map(PausaDTO::getPausaId)
+                .collect(Collectors.toList());
+
+        // Find pauses that are in the current list but not in the provided list
+        List<Pausa> pausesToRemove = currentPausas.stream()
+                .filter(pausa -> !providedPausaIds.contains(pausa.getPausaId()))
+                .collect(Collectors.toList());
+
+        // Remove the pauses
+        for (Pausa pausa : pausesToRemove) {
+            pausaService.deletePausaById(pausa.getPausaId());
+        }
+
         // Atualiza as pausas se elas foram fornecidas
         if (agendaDTO.getPausas() != null) {
-            List<Pausa> updatedPausas = new ArrayList<>();
+            List<Pausa> existingPausas = agenda.getPausas();
+
             for (PausaDTO pausaDTO : agendaDTO.getPausas()) {
                 Pausa pausa;
                 if (pausaDTO.getPausaId() != null) {
-                    pausa = pausaService.updatePausa(pausaDTO);
+                    // Se a pausa já existe, recupera a instância existente e atualiza
+                    pausa = existingPausas.stream()
+                        .filter(p -> p.getPausaId().equals(pausaDTO.getPausaId()))
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException("Pausa não encontrada"));
+                    pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
+                    pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
                 } else {
+                    // Se a pausa é nova, cria
                     pausa = new Pausa();
                     pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
                     pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
-                    pausa.setAgenda(agenda); // Define a agenda da pausa como a agenda atual
+                    pausa.setAgenda(agenda);
+                    pausa = pausaService.savePausa(pausa); // Salva a nova pausa
+                    // Adiciona a pausa à lista de pausas da agenda
+                    existingPausas.add(pausa);
                 }
-                updatedPausas.add(pausa);
             }
-            agenda.setPausas(updatedPausas);
         }
-    
+
         return agendaRepository.save(agenda);
     }
 

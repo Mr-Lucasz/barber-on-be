@@ -12,11 +12,12 @@ import lombok.Setter;
 
 import java.time.LocalTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-;
+import jakarta.persistence.JoinColumn;;
 
 @Getter
 @Setter
@@ -30,6 +31,7 @@ public class Pausa {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pausaId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agenda_id", nullable = false)
     private Agenda agenda;
@@ -39,5 +41,5 @@ public class Pausa {
 
     @Column(nullable = false)
     private LocalTime pausaHorarioFim;
-    
+
 }

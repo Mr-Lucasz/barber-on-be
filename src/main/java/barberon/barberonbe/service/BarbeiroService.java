@@ -5,10 +5,12 @@ import org.springframework.stereotype.Service;
 
 import barberon.barberonbe.DTO.AgendaDTO;
 import barberon.barberonbe.DTO.BarbeiroDTO;
+import barberon.barberonbe.DTO.PausaDTO;
 import barberon.barberonbe.DTO.ServicoDTO;
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Barbearia;
 import barberon.barberonbe.model.Barbeiro;
+import barberon.barberonbe.model.Pausa;
 import barberon.barberonbe.model.Servico;
 import barberon.barberonbe.repository.BarbeariaRepository;
 import barberon.barberonbe.repository.BarbeiroRepository;
@@ -95,7 +97,10 @@ public class BarbeiroService {
         dto.setStatusId(agenda.getStatus().getId());
         dto.setAgendaHorarioInicio(agenda.getAgendaHorarioInicio());
         dto.setAgendaHorarioFim(agenda.getAgendaHorarioFim());
-        dto.setPausas(agenda.getPausas());
+        List<PausaDTO> pausaDTOs = agenda.getPausas().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        dto.setPausas(pausaDTOs);
         return dto;
     }
 
@@ -106,6 +111,14 @@ public class BarbeiroService {
         dto.setServicoDescricao(servico.getServicoDescricao());
         dto.setServicoValor(servico.getServicoValor());
         dto.setServicoDuracao(servico.getServicoTempoMinuto().intValue());
+        return dto;
+    }
+
+    private PausaDTO convertToDTO(Pausa pausa) {
+        PausaDTO dto = new PausaDTO();
+        dto.setPausaId(pausa.getPausaId());
+        dto.setPausaHorarioInicio(pausa.getPausaHorarioInicio());
+        dto.setPausaHorarioFim(pausa.getPausaHorarioFim());
         return dto;
     }
 

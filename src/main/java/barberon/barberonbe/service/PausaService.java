@@ -19,6 +19,12 @@ public class PausaService {
         return pausaRepository.save(pausa);
     }
 
+    //salve list by agendaId
+    public List<Pausa> savePausaList(List<Pausa> pausaList) {
+        return pausaRepository.saveAll(pausaList);
+    }
+
+
     public List<Pausa> getAllPausas() {
         return pausaRepository.findAll();
     }
@@ -33,17 +39,13 @@ public class PausaService {
 
     public Pausa updatePausa(PausaDTO pausaDTO) {
         Pausa existingPausa = pausaRepository.findById(pausaDTO.getPausaId()).orElse(null);
-    
-        if (existingPausa == null) {
-            existingPausa = new Pausa();
-            // Define o id da nova Pausa como o id fornecido
-            existingPausa.setPausaId(pausaDTO.getPausaId());
-        }
-    
         existingPausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
         existingPausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
-    
         return pausaRepository.save(existingPausa);
+    }
+
+    public Pausa getPausaByAgendaId(Long agendaId) {
+        return pausaRepository.findByAgendaId(agendaId);
     }
 
 }

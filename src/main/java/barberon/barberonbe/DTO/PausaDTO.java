@@ -1,8 +1,6 @@
 package barberon.barberonbe.DTO;
 
-import java.sql.Timestamp;
 import java.time.LocalTime;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,8 +15,13 @@ import lombok.ToString;
 @ToString
 
 public class PausaDTO {
+
+ 
+    private Long agendaId;
     private Long pausaId;
     private LocalTime pausaHorarioInicio;
     private LocalTime pausaHorarioFim;
     
+
+
 }

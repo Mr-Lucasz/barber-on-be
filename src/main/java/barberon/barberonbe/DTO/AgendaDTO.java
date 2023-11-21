@@ -19,7 +19,7 @@ public class AgendaDTO {
     private String agendaDiaSemana;
     private LocalTime agendaHorarioInicio;
     private LocalTime agendaHorarioFim;
-    private List<Pausa> pausas;
+    private List<PausaDTO> pausas;
     private String statusNome; 
     private Long statusId;
 }

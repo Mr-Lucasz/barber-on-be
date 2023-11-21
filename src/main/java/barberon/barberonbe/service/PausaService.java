@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import barberon.barberonbe.DTO.PausaDTO;
+import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Pausa;
 import barberon.barberonbe.repository.PausaRepository;
 
@@ -43,6 +44,12 @@ public class PausaService {
         existingPausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
         return pausaRepository.save(existingPausa);
     }
+    
+    public Agenda getAgendaByPausa(Long pausaId) {
+    Pausa pausa = pausaRepository.findById(pausaId)
+            .orElseThrow(() -> new RuntimeException("Pausa não encontrada"));
+    return pausa.getAgenda();
+}
 
 
 }

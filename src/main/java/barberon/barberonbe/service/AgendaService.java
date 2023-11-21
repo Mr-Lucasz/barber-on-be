@@ -110,9 +110,9 @@ public class AgendaService {
                 if (pausaDTO.getPausaId() != null) {
                     // Se a pausa já existe, recupera a instância existente e atualiza
                     pausa = existingPausas.stream()
-                        .filter(p -> p.getPausaId().equals(pausaDTO.getPausaId()))
-                        .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Pausa não encontrada"));
+                            .filter(p -> p.getPausaId().equals(pausaDTO.getPausaId()))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("Pausa não encontrada"));
                     pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
                     pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
                 } else {
@@ -135,5 +135,11 @@ public class AgendaService {
         Barbeiro barbeiro = barbeiroRepository.findById(barbeiroId)
                 .orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
         return agendaRepository.findByBarbeiro(barbeiro);
+    }
+
+    public List<Pausa> getPausasByAgenda(Long agendaId) {
+        Agenda agenda = agendaRepository.findById(agendaId)
+                .orElseThrow(() -> new RuntimeException("Agenda não encontrada"));
+        return agenda.getPausas();
     }
 }

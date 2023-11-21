@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import barberon.barberonbe.DTO.AgendaDTO;
 import barberon.barberonbe.DTO.PausaDTO;
 import barberon.barberonbe.model.Agenda;
+import barberon.barberonbe.model.Pausa;
 import barberon.barberonbe.service.AgendaService;
 
 import java.util.List;
@@ -41,5 +42,10 @@ public class AgendaController {
         return new ResponseEntity<>(updatedAgenda, HttpStatus.OK);
     }
 
+    @GetMapping("/{agendaId}/pausas")
+    public ResponseEntity<List<Pausa>> getPausasByAgenda(@PathVariable Long barbeiroId, @PathVariable Long agendaId) {
+        List<Pausa> pausas = agendaService.getPausasByAgenda(agendaId);
+        return new ResponseEntity<>(pausas, HttpStatus.OK);
+    }
 
 }

@@ -17,7 +17,7 @@ import lombok.ToString;
 public class PausaDTO {
 
  
-    private Long agendaId;
+
     private Long pausaId;
     private LocalTime pausaHorarioInicio;
     private LocalTime pausaHorarioFim;

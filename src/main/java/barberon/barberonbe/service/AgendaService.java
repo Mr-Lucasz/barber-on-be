@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import barberon.barberonbe.DTO.AgendaDTO;
+import barberon.barberonbe.DTO.AgendaRequest;
 import barberon.barberonbe.DTO.PausaDTO;
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Barbeiro;
@@ -12,8 +13,13 @@ import barberon.barberonbe.model.Status;
 import barberon.barberonbe.repository.AgendaRepository;
 import barberon.barberonbe.repository.BarbeiroRepository;
 import barberon.barberonbe.repository.StatusRepository;
+
+import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -106,13 +112,13 @@ public class AgendaService {
             List<Pausa> existingPausas = agenda.getPausas();
 
             for (PausaDTO pausaDTO : agendaDTO.getPausas()) {
-                Pausa pausa;
-                if (pausaDTO.getPausaId() != null) {
-                    // Se a pausa já existe, recupera a instância existente e atualiza
-                    pausa = existingPausas.stream()
-                            .filter(p -> p.getPausaId().equals(pausaDTO.getPausaId()))
-                            .findFirst()
-                            .orElseThrow(() -> new RuntimeException("Pausa não encontrada"));
+                Pausa pausa = existingPausas.stream()
+                        .filter(p -> p.getPausaId() != null && p.getPausaId().equals(pausaDTO.getPausaId()))
+                        .findFirst()
+                        .orElse(null); // Retorna null se a pausa não for encontrada
+
+                if (pausa != null) {
+                    // Se a pausa já existe, atualiza
                     pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
                     pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
                 } else {
@@ -142,4 +148,50 @@ public class AgendaService {
                 .orElseThrow(() -> new RuntimeException("Agenda não encontrada"));
         return agenda.getPausas();
     }
+
+        private Pausa findExistingPausa(Set<Pausa> pausas, Long pausaId) {
+        if (pausaId == null) {
+            return null;
+        }
+        return pausas.stream()
+                .filter(p -> p.getPausaId().equals(pausaId))
+                .findFirst()
+                .orElse(null);
+    }
+
+    private void updatePausaData(Pausa pausa, PausaDTO dto) {
+        pausa.setPausaHorarioInicio(dto.getPausaHorarioInicio());
+        pausa.setPausaHorarioFim(dto.getPausaHorarioFim());
+    }
+
+    public Agenda updateBarbeiroAgenda(Long barbeiroId, Long agendaId, AgendaRequest agendaRequest) {
+        Barbeiro barbeiro = barbeiroRepository.findById(barbeiroId)
+                .orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
+
+        Agenda agenda = agendaRepository
+                .findByAgendaIdAndBarbeiro(agendaId, barbeiro)
+                .orElseThrow(() -> new RuntimeException("Agenda não encontrada para este barbeiro: " + barbeiroId));
+
+        // Vamos atualizar o conjunto de Pausas existentes
+        Set<Pausa> existingPausas = new HashSet<>(agenda.getPausas());
+
+        for (PausaDTO dto : agendaRequest.getPausas()) {
+
+            // Encontramos a Pausa correspondente pelo id, se existir
+            Pausa pausa = findExistingPausa(existingPausas, dto.getPausaId());
+
+            if (pausa == null) { // Se a Pausa não existe, vamos criar uma nova
+                pausa = new Pausa();
+                pausa.setAgenda(agenda);
+                agenda.getPausas().add(pausa);
+            }
+
+            updatePausaData(pausa, dto); // Atualizamos os dados da Pausa
+        }
+        return agendaRepository.save(agenda);
+    }
+
+
+
+
 }

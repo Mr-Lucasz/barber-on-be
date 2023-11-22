@@ -41,5 +41,4 @@ public class Pausa {
 
     @Column(nullable = false)
     private LocalTime pausaHorarioFim;
-
 }

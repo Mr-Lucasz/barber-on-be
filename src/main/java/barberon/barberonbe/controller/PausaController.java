@@ -23,6 +23,7 @@ import barberon.barberonbe.service.PausaService;
 @CrossOrigin(origins = "http://localhost:4000")
 @RestController
 @RequestMapping("/api/pausas")
+
 public class PausaController {
     private final PausaService pausaService;
 

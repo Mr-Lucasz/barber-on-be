@@ -132,7 +132,9 @@ public class AgendaService {
             Status status = findStatusById(agendaDTO.getStatusId());
             agenda.setStatus(status);
         }
-        updatePausas(agenda, agendaDTO.getPausas());
+        if (agendaDTO.getPausas() != null) {
+            updatePausas(agenda, agendaDTO.getPausas());
+        }
     }
 
     private void updatePausas(Agenda agenda, List<PausaDTO> pausasDTO) {

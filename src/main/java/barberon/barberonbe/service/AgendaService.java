@@ -14,12 +14,8 @@ import barberon.barberonbe.repository.AgendaRepository;
 import barberon.barberonbe.repository.BarbeiroRepository;
 import barberon.barberonbe.repository.StatusRepository;
 
-import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,43 +34,91 @@ public class AgendaService {
     private PausaService pausaService;
 
     public List<Agenda> addAgendas(Long barbeiroId, List<AgendaDTO> agendasDTO) {
-        Barbeiro barbeiro = barbeiroRepository.findById(barbeiroId)
+        Barbeiro barbeiro = findBarbeiroById(barbeiroId);
+        List<Agenda> newAgendas = createAgendasFromDTO(agendasDTO, barbeiro);
+        return newAgendas;
+    }
+
+    public Agenda updateAgenda(Long agendaId, AgendaDTO agendaDTO) {
+        Agenda agenda = findAgendaById(agendaId);
+        updateAgendaData(agenda, agendaDTO);
+        return agendaRepository.save(agenda);
+    }
+
+    public List<Agenda> getAgendasByBarbeiro(Long barbeiroId) {
+        Barbeiro barbeiro = findBarbeiroById(barbeiroId);
+        return agendaRepository.findByBarbeiro(barbeiro);
+    }
+
+    public List<Pausa> getPausasByAgenda(Long agendaId) {
+        Agenda agenda = findAgendaById(agendaId);
+        return agenda.getPausas();
+    }
+
+    public Agenda updateBarbeiroAgenda(Long barbeiroId, Long agendaId, AgendaRequest agendaRequest) {
+        Barbeiro barbeiro = findBarbeiroById(barbeiroId);
+        Agenda agenda = findAgendaByBarbeiro(agendaId, barbeiro);
+        updatePausas(agenda, agendaRequest.getPausas());
+        return agendaRepository.save(agenda);
+    }
+
+    private Barbeiro findBarbeiroById(Long barbeiroId) {
+        return barbeiroRepository.findById(barbeiroId)
                 .orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
+    }
+
+    private Agenda findAgendaById(Long agendaId) {
+        return agendaRepository.findById(agendaId)
+                .orElseThrow(() -> new RuntimeException("Agenda não encontrada"));
+    }
+
+    private Agenda findAgendaByBarbeiro(Long agendaId, Barbeiro barbeiro) {
+        return agendaRepository
+                .findByAgendaIdAndBarbeiro(agendaId, barbeiro)
+                .orElseThrow(
+                        () -> new RuntimeException("Agenda não encontrada para este barbeiro: " + barbeiro.getId()));
+    }
+
+    private List<Agenda> createAgendasFromDTO(List<AgendaDTO> agendasDTO, Barbeiro barbeiro) {
         List<Agenda> newAgendas = new ArrayList<>();
         for (AgendaDTO agendaDTO : agendasDTO) {
-            Status status = statusRepository.findById(agendaDTO.getStatusId())
-                    .orElseThrow(() -> new RuntimeException("Status não encontrado"));
-
-            Agenda newAgenda = new Agenda();
-            newAgenda.setAgendaDiaSemana(agendaDTO.getAgendaDiaSemana());
-            newAgenda.setAgendaHorarioInicio(agendaDTO.getAgendaHorarioInicio());
-            newAgenda.setAgendaHorarioFim(agendaDTO.getAgendaHorarioFim());
-
-            // Converte a lista de PausaDTO em uma lista de Pausa
-            List<Pausa> pausas = new ArrayList<>();
-            for (PausaDTO pausaDTO : agendaDTO.getPausas()) {
-                Pausa pausa = new Pausa();
-                pausa.setPausaId(pausaDTO.getPausaId());
-                pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
-                pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
-                pausa.setAgenda(newAgenda); // Define a agenda da pausa como a nova agenda
-                pausas.add(pausa);
-            }
-            newAgenda.setPausas(pausas);
-
-            newAgenda.setBarbeiro(barbeiro);
-            newAgenda.setStatus(status);
-
+            Status status = findStatusById(agendaDTO.getStatusId());
+            Agenda newAgenda = createAgendaFromDTO(agendaDTO, barbeiro, status);
             newAgendas.add(agendaRepository.save(newAgenda));
         }
         return newAgendas;
     }
 
-    // patch / update agenda - relacionando o BarbeiroId e AgendaId
-    public Agenda updateAgenda(Long agendaId, AgendaDTO agendaDTO) {
-        Agenda agenda = agendaRepository.findById(agendaId)
-                .orElseThrow(() -> new RuntimeException("Agenda não encontrada"));
+    private Agenda createAgendaFromDTO(AgendaDTO agendaDTO, Barbeiro barbeiro, Status status) {
+        Agenda newAgenda = new Agenda();
+        newAgenda.setAgendaDiaSemana(agendaDTO.getAgendaDiaSemana());
+        newAgenda.setAgendaHorarioInicio(agendaDTO.getAgendaHorarioInicio());
+        newAgenda.setAgendaHorarioFim(agendaDTO.getAgendaHorarioFim());
+        newAgenda.setPausas(createPausasFromDTO(agendaDTO.getPausas(), newAgenda));
+        newAgenda.setBarbeiro(barbeiro);
+        newAgenda.setStatus(status);
+        return newAgenda;
+    }
 
+    private List<Pausa> createPausasFromDTO(List<PausaDTO> pausasDTO, Agenda newAgenda) {
+        List<Pausa> pausas = new ArrayList<>();
+        for (PausaDTO pausaDTO : pausasDTO) {
+            Pausa pausa = new Pausa();
+            pausa.setPausaId(pausaDTO.getPausaId());
+            pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
+            pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
+            pausa.setAgenda(newAgenda);
+            pausas.add(pausa);
+        }
+        return pausas;
+    }
+
+    private Status findStatusById(Long statusId) {
+        return statusRepository.findById(statusId)
+                .orElseThrow(() -> new RuntimeException("Status não encontrado"));
+    }
+
+    private void updateAgendaData(Agenda agenda, AgendaDTO agendaDTO) {
         if (agendaDTO.getAgendaDiaSemana() != null) {
             agenda.setAgendaDiaSemana(agendaDTO.getAgendaDiaSemana());
         }
@@ -85,71 +129,43 @@ public class AgendaService {
             agenda.setAgendaHorarioFim((agendaDTO.getAgendaHorarioFim()));
         }
         if (agendaDTO.getStatusId() != null) {
-            Status status = statusRepository.findById(agendaDTO.getStatusId())
-                    .orElseThrow(() -> new RuntimeException("Status não encontrado"));
+            Status status = findStatusById(agendaDTO.getStatusId());
             agenda.setStatus(status);
         }
-        // Get the current list of pauses
-        List<Pausa> currentPausas = agenda.getPausas();
+        updatePausas(agenda, agendaDTO.getPausas());
+    }
 
-        // Convert the list of PausaDTO to a list of Pausa ids
-        List<Long> providedPausaIds = agendaDTO.getPausas().stream()
+    private void updatePausas(Agenda agenda, List<PausaDTO> pausasDTO) {
+        List<Pausa> currentPausas = agenda.getPausas();
+        List<Long> providedPausaIds = pausasDTO.stream()
                 .map(PausaDTO::getPausaId)
                 .collect(Collectors.toList());
 
-        // Find pauses that are in the current list but not in the provided list
         List<Pausa> pausesToRemove = currentPausas.stream()
                 .filter(pausa -> !providedPausaIds.contains(pausa.getPausaId()))
                 .collect(Collectors.toList());
 
-        // Remove the pauses
         for (Pausa pausa : pausesToRemove) {
             pausaService.deletePausaById(pausa.getPausaId());
         }
 
-        // Atualiza as pausas se elas foram fornecidas
-        if (agendaDTO.getPausas() != null) {
+        if (pausasDTO != null) {
             List<Pausa> existingPausas = agenda.getPausas();
 
-            for (PausaDTO pausaDTO : agendaDTO.getPausas()) {
-                Pausa pausa = existingPausas.stream()
-                        .filter(p -> p.getPausaId() != null && p.getPausaId().equals(pausaDTO.getPausaId()))
-                        .findFirst()
-                        .orElse(null); // Retorna null se a pausa não for encontrada
+            for (PausaDTO pausaDTO : pausasDTO) {
+                Pausa pausa = findExistingPausa(existingPausas, pausaDTO.getPausaId());
 
                 if (pausa != null) {
-                    // Se a pausa já existe, atualiza
-                    pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
-                    pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
+                    updatePausaData(pausa, pausaDTO);
                 } else {
-                    // Se a pausa é nova, cria
-                    pausa = new Pausa();
-                    pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
-                    pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
-                    pausa.setAgenda(agenda);
-                    pausa = pausaService.savePausa(pausa); // Salva a nova pausa
-                    // Adiciona a pausa à lista de pausas da agenda
-                    existingPausas.add(pausa);
+                    pausa = createPausaFromDTO(pausaDTO, agenda);
+                    existingPausas.add(pausaService.savePausa(pausa));
                 }
             }
         }
-
-        return agendaRepository.save(agenda);
     }
 
-    public List<Agenda> getAgendasByBarbeiro(Long barbeiroId) {
-        Barbeiro barbeiro = barbeiroRepository.findById(barbeiroId)
-                .orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
-        return agendaRepository.findByBarbeiro(barbeiro);
-    }
-
-    public List<Pausa> getPausasByAgenda(Long agendaId) {
-        Agenda agenda = agendaRepository.findById(agendaId)
-                .orElseThrow(() -> new RuntimeException("Agenda não encontrada"));
-        return agenda.getPausas();
-    }
-
-        private Pausa findExistingPausa(Set<Pausa> pausas, Long pausaId) {
+    private Pausa findExistingPausa(List<Pausa> pausas, Long pausaId) {
         if (pausaId == null) {
             return null;
         }
@@ -164,34 +180,11 @@ public class AgendaService {
         pausa.setPausaHorarioFim(dto.getPausaHorarioFim());
     }
 
-    public Agenda updateBarbeiroAgenda(Long barbeiroId, Long agendaId, AgendaRequest agendaRequest) {
-        Barbeiro barbeiro = barbeiroRepository.findById(barbeiroId)
-                .orElseThrow(() -> new RuntimeException("Barbeiro não encontrado"));
-
-        Agenda agenda = agendaRepository
-                .findByAgendaIdAndBarbeiro(agendaId, barbeiro)
-                .orElseThrow(() -> new RuntimeException("Agenda não encontrada para este barbeiro: " + barbeiroId));
-
-        // Vamos atualizar o conjunto de Pausas existentes
-        Set<Pausa> existingPausas = new HashSet<>(agenda.getPausas());
-
-        for (PausaDTO dto : agendaRequest.getPausas()) {
-
-            // Encontramos a Pausa correspondente pelo id, se existir
-            Pausa pausa = findExistingPausa(existingPausas, dto.getPausaId());
-
-            if (pausa == null) { // Se a Pausa não existe, vamos criar uma nova
-                pausa = new Pausa();
-                pausa.setAgenda(agenda);
-                agenda.getPausas().add(pausa);
-            }
-
-            updatePausaData(pausa, dto); // Atualizamos os dados da Pausa
-        }
-        return agendaRepository.save(agenda);
+    private Pausa createPausaFromDTO(PausaDTO pausaDTO, Agenda agenda) {
+        Pausa pausa = new Pausa();
+        pausa.setPausaHorarioInicio(pausaDTO.getPausaHorarioInicio());
+        pausa.setPausaHorarioFim(pausaDTO.getPausaHorarioFim());
+        pausa.setAgenda(agenda);
+        return pausa;
     }
-
-
-
-
 }

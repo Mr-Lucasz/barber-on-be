@@ -24,7 +24,7 @@ public class AgendaController {
 
     @PostMapping
     public ResponseEntity<List<Agenda>> addAgenda(@PathVariable Long barbeiroId,
-            @RequestBody List<AgendaDTO> agendasDTO) {
+                                                   @RequestBody List<AgendaDTO> agendasDTO) {
         List<Agenda> newAgendas = agendaService.addAgendas(barbeiroId, agendasDTO);
         return new ResponseEntity<>(newAgendas, HttpStatus.CREATED);
     }
@@ -35,26 +35,22 @@ public class AgendaController {
         return new ResponseEntity<>(agendas, HttpStatus.OK);
     }
 
-    // patch / update agenda - relacionando o BarbeiroId e AgendaId
     @PatchMapping("/{agendaId}")
     public ResponseEntity<Agenda> updateAgenda(@PathVariable Long barbeiroId, @PathVariable Long agendaId,
-            @RequestBody AgendaDTO agendaDTO) {
+                                                @RequestBody AgendaDTO agendaDTO) {
         Agenda updatedAgenda = agendaService.updateAgenda(agendaId, agendaDTO);
         return new ResponseEntity<>(updatedAgenda, HttpStatus.OK);
     }
-
     @GetMapping("/{agendaId}/pausas")
     public ResponseEntity<List<Pausa>> getPausasByAgenda(@PathVariable Long barbeiroId, @PathVariable Long agendaId) {
         List<Pausa> pausas = agendaService.getPausasByAgenda(agendaId);
         return new ResponseEntity<>(pausas, HttpStatus.OK);
     }
-
     @PatchMapping("/{agendaId}/pausas")
-    public ResponseEntity<Agenda> updateBarbeiroAgenda(@PathVariable Long barbeiroId, 
-                                                       @PathVariable Long agendaId, 
-                                                       @RequestBody AgendaRequest agendaRequest) {
+    public ResponseEntity<Agenda> updateBarbeiroAgenda(@PathVariable Long barbeiroId,
+                                                        @PathVariable Long agendaId,
+                                                        @RequestBody AgendaRequest agendaRequest) {
         Agenda agenda = agendaService.updateBarbeiroAgenda(barbeiroId, agendaId, agendaRequest);
         return ResponseEntity.ok().body(agenda);
     }
-
 }

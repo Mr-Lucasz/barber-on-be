@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 import barberon.barberonbe.DTO.AgendaDTO;
 import barberon.barberonbe.DTO.AgendaRequest;
-import barberon.barberonbe.DTO.PausaDTO;
 import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Pausa;
 import barberon.barberonbe.service.AgendaService;

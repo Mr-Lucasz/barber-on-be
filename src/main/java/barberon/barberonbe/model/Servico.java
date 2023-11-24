@@ -32,9 +32,9 @@ public class Servico {
     private Barbeiro barbeiro;
 
     @OneToOne
-    @JoinColumn(name = "imagem_id", nullable = false)
+    @JoinColumn(name = "imagem_id", nullable = true)
     private Imagem imagem;
-
+  
     @Column(nullable = false)
     private String servicoTitulo;
 
@@ -42,9 +42,12 @@ public class Servico {
     private String servicoDescricao;
 
     @Column(nullable = false)
-    private Double servicoTempoMinuto;
+    private int servicoTempoHora;
 
     @Column(nullable = false)
-    private Double servicoValor;
+    private int servicoTempoMinuto;
+
+    @Column(nullable = false)
+    private double servicoValor;
 
 }

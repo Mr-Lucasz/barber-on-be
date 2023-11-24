@@ -27,6 +27,9 @@ public class BarbeiroService {
     @Autowired
     private BarbeariaRepository barbeariaRepository;
 
+    @Autowired
+    private ServicoService servicoService;
+
     @Transactional
     public List<BarbeiroDTO> findAllBarbeirosWithAgendas() {
         List<Barbeiro> barbeiros = repository.findAll();
@@ -107,10 +110,11 @@ public class BarbeiroService {
     private ServicoDTO convertToDTO(Servico servico) {
         ServicoDTO dto = new ServicoDTO();
         dto.setServicoId(servico.getServicoId());
-        dto.setServicoNome(servico.getServicoTitulo());
+        dto.setServicoTitulo(servico.getServicoTitulo());
         dto.setServicoDescricao(servico.getServicoDescricao());
         dto.setServicoValor(servico.getServicoValor());
-        dto.setServicoDuracao(servico.getServicoTempoMinuto().intValue());
+        dto.setServicoTempoHora(servico.getServicoTempoHora());
+        dto.setServicoTempoMinuto(servico.getServicoTempoMinuto());
         return dto;
     }
 

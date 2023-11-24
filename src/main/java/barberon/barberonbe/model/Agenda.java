@@ -19,8 +19,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-
 @Entity
 @Getter
 @Setter
@@ -28,15 +26,17 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 @NoArgsConstructor
 @Table(name = "agenda")
 public class Agenda {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "agenda_id")
     private Long agendaId;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "barbeiro_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
+    @JoinColumn(name = "barbeiro_id", nullable = false)
     private Barbeiro barbeiro;
-
+    
     @Column(nullable = false)
     private String agendaDiaSemana;
 

@@ -64,11 +64,10 @@ public class Barbeiro {
     @Column(nullable = true)
     private Double mediaAvaliacao;
 
-    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Agenda> agendas = new ArrayList<>();
     
-
-    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Servico> servicos = new ArrayList<>();
 
     @OneToOne(mappedBy = "barbeiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)

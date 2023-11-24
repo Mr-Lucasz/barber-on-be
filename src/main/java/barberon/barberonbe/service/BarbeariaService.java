@@ -1,7 +1,6 @@
 package barberon.barberonbe.service;
 
 import barberon.barberonbe.model.Barbearia;
-import barberon.barberonbe.model.Barbeiro;
 import barberon.barberonbe.repository.BarbeariaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

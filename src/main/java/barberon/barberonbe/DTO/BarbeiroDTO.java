@@ -2,9 +2,6 @@ package barberon.barberonbe.DTO;
 
 import java.sql.Date;
 import java.util.List;
-
-import barberon.barberonbe.model.Agenda;
-import barberon.barberonbe.model.Servico;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

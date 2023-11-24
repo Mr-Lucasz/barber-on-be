@@ -27,8 +27,8 @@ public class BarbeiroService {
     @Autowired
     private BarbeariaRepository barbeariaRepository;
 
-    @Autowired
-    private ServicoService servicoService;
+    // @Autowired
+    // private ServicoService servicoService;
 
     @Transactional
     public List<BarbeiroDTO> findAllBarbeirosWithAgendas() {

@@ -1,12 +1,8 @@
 package barberon.barberonbe.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import barberon.barberonbe.DTO.BarbeiroDTO;
-import barberon.barberonbe.model.Agenda;
 import barberon.barberonbe.model.Barbeiro;
 import barberon.barberonbe.service.BarbeiroService;
 

@@ -2,8 +2,6 @@ package barberon.barberonbe.DTO;
 
 import java.time.LocalTime;
 import java.util.List;
-
-import barberon.barberonbe.model.Pausa;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

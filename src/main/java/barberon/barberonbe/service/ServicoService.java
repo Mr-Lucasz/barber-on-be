@@ -32,4 +32,15 @@ public class ServicoService {
     public void deleteById(long id) {
         repository.deleteById(id);
     }
+
+    public void uptadeServiceById(long id, Servico servico) {
+
+        servico = repository.findById(id).orElse(null);
+        servico.setServicoTitulo(servico.getServicoTitulo());
+        servico.setServicoDescricao(servico.getServicoDescricao());
+        servico.setServicoValor(servico.getServicoValor());
+        servico.setBarbeiro(servico.getBarbeiro());
+        // servico.setImagem(servico.getImagem());
+        repository.save(servico);
+    }
 }

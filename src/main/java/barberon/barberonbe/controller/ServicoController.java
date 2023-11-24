@@ -34,4 +34,10 @@ public class ServicoController {
     public void deleteById(@PathVariable long id) {
         servicoService.deleteById(id);
     }
+
+    @PutMapping("/{id}")
+    public void uptadeServiceById(@PathVariable long id, @RequestBody Servico servico) {
+        servicoService.uptadeServiceById(id, servico);
+    }
+    
 }

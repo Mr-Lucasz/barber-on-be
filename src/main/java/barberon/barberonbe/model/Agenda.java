@@ -33,8 +33,8 @@ public class Agenda {
     private Long agendaId;
 
     @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
-    @JoinColumn(name = "barbeiro_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @JoinColumn(name = "barbeiro_id")
     private Barbeiro barbeiro;
     
     @Column(nullable = false)

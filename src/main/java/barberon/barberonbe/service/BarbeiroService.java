@@ -27,24 +27,26 @@ public class BarbeiroService {
     @Autowired
     private BarbeariaRepository barbeariaRepository;
 
-    // @Autowired
-    // private ServicoService servicoService;
-
     @Transactional
-    public List<BarbeiroDTO> findAllBarbeirosWithAgendas() {
+    public List<BarbeiroDTO> findAllBarbeirosWithAgendasAndServicos() {
         List<Barbeiro> barbeiros = repository.findAll();
         return barbeiros.stream()
-                .map(this::convertToDTOWithAgendas)
+                .map(this::convertToDTOWithAgendasAndServicos)
                 .collect(Collectors.toList());
     }
 
-    private BarbeiroDTO convertToDTOWithAgendas(Barbeiro barbeiro) {
+    private BarbeiroDTO convertToDTOWithAgendasAndServicos(Barbeiro barbeiro) {
         BarbeiroDTO dto = convertToDTO(barbeiro);
         barbeiro.getAgendas().size();
         List<AgendaDTO> agendaDTOs = barbeiro.getAgendas().stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
         dto.setAgendas(agendaDTOs);
+        barbeiro.getServicos().size();
+        List<ServicoDTO> servicoDTOs = barbeiro.getServicos().stream()
+                .map(this::convertToDTO)
+                .collect(Collectors.toList());
+        dto.setServicos(servicoDTOs);
         return dto;
     }
 
@@ -81,14 +83,6 @@ public class BarbeiroService {
         dto.setEmail(barbeiro.getEmail());
         dto.setSenha(barbeiro.getSenha());
         dto.setMediaAvaliacao(barbeiro.getMediaAvaliacao());
-        List<AgendaDTO> agendaDTOs = barbeiro.getAgendas().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-        dto.setAgendas(agendaDTOs);
-        List<ServicoDTO> servicoDTOs = barbeiro.getServicos().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
-        dto.setServicos(servicoDTOs);
         return dto;
     }
 
@@ -125,5 +119,4 @@ public class BarbeiroService {
         dto.setPausaHorarioFim(pausa.getPausaHorarioFim());
         return dto;
     }
-
 }

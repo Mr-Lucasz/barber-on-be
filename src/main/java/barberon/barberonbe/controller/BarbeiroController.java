@@ -23,8 +23,9 @@ public class BarbeiroController {
 
     @GetMapping
     public List<BarbeiroDTO> findAll() {
-        return barbeiroService.findAllBarbeirosWithAgendas();
+        return barbeiroService.findAllBarbeirosWithAgendasAndServicos();
     }
+    
 
     @GetMapping("/{id}")
     public Barbeiro getById(@PathVariable long id) {

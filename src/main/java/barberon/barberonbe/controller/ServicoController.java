@@ -19,6 +19,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4000")
 
 public class ServicoController {
+    
     @Autowired
     private ServicoService servicoService;
 
@@ -31,6 +32,18 @@ public class ServicoController {
     public ResponseEntity<List<Servico>> getServicosByBarbeiro(@PathVariable Long barbeiroId) {
         List<Servico> servicos = servicoService.getServicosByBarbeiro(barbeiroId);
         return new ResponseEntity<>(servicos, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{servicoId}")
+    public ResponseEntity<?> deleteServico(@PathVariable Long servicoId) {
+        servicoService.deleteServico(servicoId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/{barbeiroId}/{servicoId}")
+    public ResponseEntity<Servico> updateBarbeiroServico(@PathVariable Long barbeiroId, @PathVariable Long servicoId) {
+        Servico servico = servicoService.updateBarbeiroServico(barbeiroId, servicoId);
+        return ResponseEntity.ok().body(servico);
     }
 
 }

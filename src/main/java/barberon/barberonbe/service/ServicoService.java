@@ -35,7 +35,11 @@ public class ServicoService {
                 .orElseThrow(() -> new RuntimeException("Serviço não encontrado"));
     }
 
-   private Servico updateBarbeiroServico (Long barbeiroId, Long servicoId){
+    public void deleteServico(Long servicoId) {
+        serviceRepository.deleteById(servicoId);
+    }
+
+   public Servico updateBarbeiroServico (Long barbeiroId, Long servicoId){
          Barbeiro barbeiro = findBarbeiroById(barbeiroId);
          Servico servico = findServicoById(servicoId);
          servico.setBarbeiro(barbeiro);

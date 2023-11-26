@@ -2,8 +2,6 @@ package barberon.barberonbe.DTO;
 
 import java.time.LocalTime;
 import java.util.List;
-
-import barberon.barberonbe.model.Pausa;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +17,7 @@ public class AgendaDTO {
     private String agendaDiaSemana;
     private LocalTime agendaHorarioInicio;
     private LocalTime agendaHorarioFim;
-    private List<Pausa> pausas;
+    private List<PausaDTO> pausas;
     private String statusNome; 
+    private Long statusId;
 }

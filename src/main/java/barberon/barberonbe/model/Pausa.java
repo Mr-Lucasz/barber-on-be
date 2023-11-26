@@ -9,14 +9,15 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import java.sql.Timestamp;
+
+import java.time.LocalTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
-import jakarta.persistence.JoinColumn;
-
-
-
+import jakarta.persistence.JoinColumn;;
 
 @Getter
 @Setter
@@ -30,15 +31,14 @@ public class Pausa {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pausaId;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "agenda_id", nullable = false)
     private Agenda agenda;
 
     @Column(nullable = false)
-    private Timestamp pausaHorarioInicio;
+    private LocalTime pausaHorarioInicio;
 
     @Column(nullable = false)
-    private Timestamp pausaHorarioFim;
-
-    
+    private LocalTime pausaHorarioFim;
 }

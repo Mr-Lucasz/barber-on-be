@@ -1,12 +1,9 @@
 package barberon.barberonbe.model;
 
-import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-
-import barberon.barberonbe.DTO.AgendaDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -47,9 +44,9 @@ public class Barbeiro {
     @NotBlank(message = "Nome é obrigatório")
     private String nome;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     @Column(nullable = false)
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
 
     @Column(nullable = false)
     private String cpf;
@@ -64,17 +61,16 @@ public class Barbeiro {
     @Column(nullable = false)
     private String senha;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Double mediaAvaliacao;
 
-    @OneToMany(mappedBy = "barbeiro")
+    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Agenda> agendas = new ArrayList<>();
 
-    @OneToMany(mappedBy = "barbeiro")
+    @OneToMany(mappedBy = "barbeiro", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<Servico> servicos = new ArrayList<>();
 
     @OneToOne(mappedBy = "barbeiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Imagem imagem;
-    
 
 }

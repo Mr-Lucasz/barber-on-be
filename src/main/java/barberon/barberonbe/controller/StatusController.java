@@ -17,9 +17,10 @@ import barberon.barberonbe.service.StatusService;
 @RequestMapping("/api/status")
 @CrossOrigin(origins = "http://localhost:4000")
 public class StatusController {
-    private final StatusService statusService;
 
     @Autowired
+    private final StatusService statusService;
+
     public StatusController(StatusService statusService) {
         this.statusService = statusService;
     }
@@ -34,5 +35,4 @@ public class StatusController {
         return statusService.getAllStatus();
     }
 
-    // Add more endpoints as needed
 }

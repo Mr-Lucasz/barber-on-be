@@ -1,6 +1,7 @@
 package barberon.barberonbe.DTO;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class BarbeiroDTO {
     private Long id;
     private Long barbeariaId;
     private String nome;
-    private Date dataNascimento;
+    private LocalDate dataNascimento;
     private String cpf;
     private String telefone;
     private String email;

@@ -39,11 +39,13 @@ public class ServicoService {
         serviceRepository.deleteById(servicoId);
     }
 
-   public Servico updateBarbeiroServico (Long barbeiroId, Long servicoId){
-         Barbeiro barbeiro = findBarbeiroById(barbeiroId);
-         Servico servico = findServicoById(servicoId);
-         servico.setBarbeiro(barbeiro);
-         return serviceRepository.save(servico);
+    public Servico updateBarbeiroServico(Long barbeiroId, Long servicoId, ServicoDTO servicoDTO) {
+        Barbeiro barbeiro = findBarbeiroById(barbeiroId);
+        Servico servico = findServicoById(servicoId);
+        
+        servico.setBarbeiro(barbeiro);
+        updateServicoData(servico, servicoDTO);
+        return serviceRepository.save(servico);
     }
 
     public List<Servico> getServicosByBarbeiro(Long barbeiroId) {
@@ -62,10 +64,10 @@ public class ServicoService {
         if(servicoDTO.getServicoValor() != 0) {
             servico.setServicoValor(servicoDTO.getServicoValor());
         }
-        if(servicoDTO.getServicoTempoHora() != 0) {
+        if(servicoDTO.getServicoTempoHora() >= 0) {
             servico.setServicoTempoHora(servicoDTO.getServicoTempoHora());
         }
-        if(servicoDTO.getServicoTempoMinuto() != 0) {
+        if(servicoDTO.getServicoTempoMinuto() >= 0) {
             servico.setServicoTempoMinuto(servicoDTO.getServicoTempoMinuto());
         }
 

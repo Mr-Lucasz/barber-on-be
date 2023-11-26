@@ -37,6 +37,11 @@ public class BarbeiroController {
         barbeiroService.deleteById(id);
     }
 
+    @PatchMapping("/{id}")
+    public BarbeiroDTO updateBarbeiro(@PathVariable long id, @RequestBody BarbeiroDTO barbeiroDTO) {
+        return barbeiroService.updateBarbeiro(id, barbeiroDTO);
+    }
+
 
 
 }

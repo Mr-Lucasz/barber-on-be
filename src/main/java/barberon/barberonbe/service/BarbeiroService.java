@@ -15,6 +15,8 @@ import barberon.barberonbe.model.Servico;
 import barberon.barberonbe.repository.BarbeariaRepository;
 import barberon.barberonbe.repository.BarbeiroRepository;
 import jakarta.transaction.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -119,4 +121,37 @@ public class BarbeiroService {
         dto.setPausaHorarioFim(pausa.getPausaHorarioFim());
         return dto;
     }
+
+    public BarbeiroDTO updateBarbeiro(long id, BarbeiroDTO barbeiroDTO) {
+        Barbeiro barbeiro = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Barbeiro com id " + id + " não encontrado"));
+        updateBarbeiroData(barbeiro, barbeiroDTO);
+        Barbeiro savedBarbeiro = repository.save(barbeiro);
+        return convertToDTO(savedBarbeiro);
+    }
+
+    private void updateBarbeiroData(Barbeiro barbeiro, BarbeiroDTO barbeiroDTO) {
+        if (barbeiroDTO.getNome() != null) {
+            barbeiro.setNome(barbeiroDTO.getNome());
+        }
+        if (barbeiroDTO.getDataNascimento() != null) {
+            barbeiro.setDataNascimento((barbeiroDTO.getDataNascimento()));
+        }
+        if (barbeiroDTO.getCpf() != null) {
+            barbeiro.setCpf(barbeiroDTO.getCpf());
+        }
+        if (barbeiroDTO.getTelefone() != null) {
+            barbeiro.setTelefone(barbeiroDTO.getTelefone());
+        }
+        if (barbeiroDTO.getEmail() != null) {
+            barbeiro.setEmail(barbeiroDTO.getEmail());
+        }
+        if (barbeiroDTO.getSenha() != null) {
+            barbeiro.setSenha(barbeiroDTO.getSenha());
+        }
+        if (barbeiroDTO.getMediaAvaliacao() != null) {
+            barbeiro.setMediaAvaliacao(barbeiroDTO.getMediaAvaliacao());
+        }
+    }
+
 }

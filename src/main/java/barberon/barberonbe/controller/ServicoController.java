@@ -19,7 +19,7 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4000")
 
 public class ServicoController {
-    
+
     @Autowired
     private ServicoService servicoService;
 
@@ -41,8 +41,9 @@ public class ServicoController {
     }
 
     @PatchMapping("/{barbeiroId}/{servicoId}")
-    public ResponseEntity<Servico> updateBarbeiroServico(@PathVariable Long barbeiroId, @PathVariable Long servicoId) {
-        Servico servico = servicoService.updateBarbeiroServico(barbeiroId, servicoId);
+    public ResponseEntity<Servico> updateBarbeiroServico(@PathVariable Long barbeiroId, @PathVariable Long servicoId,
+            @RequestBody ServicoDTO servicoDTO) {
+        Servico servico = servicoService.updateBarbeiroServico(barbeiroId, servicoId, servicoDTO);
         return ResponseEntity.ok().body(servico);
     }
 

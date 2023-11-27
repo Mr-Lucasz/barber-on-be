@@ -13,11 +13,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import barberon.barberonbe.DTO.CupomDTO;
 import barberon.barberonbe.model.Cupom;
 import barberon.barberonbe.service.CupomService;
 
+@RestController
 @RequestMapping("/api/cupons")
 @CrossOrigin(origins = "http://localhost:4000")
 

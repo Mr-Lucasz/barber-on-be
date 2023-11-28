@@ -13,15 +13,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import barberon.barberonbe.DTO.AgendamentoDTO;
 import barberon.barberonbe.model.Agendamento;
 import barberon.barberonbe.service.AgendamentoService;
 
+@RestController
 @RequestMapping("/api/agendamentos")
 @CrossOrigin(origins = "http://localhost:4000")
 
 public class AgendamentoController {
+	
 	@Autowired
 	private AgendamentoService agendamentoService;
 

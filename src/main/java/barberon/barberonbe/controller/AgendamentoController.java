@@ -29,14 +29,14 @@ public class AgendamentoController {
 	@Autowired
 	private AgendamentoService agendamentoService;
 
-	@PostMapping
+	@PostMapping("/new")
 	public ResponseEntity<AgendamentoListDTO> createAgendamento(@RequestBody AgendamentoDTO agendamentoDTO) {
 		AgendamentoListDTO newAgendamento = agendamentoService.save(agendamentoDTO);
 		return new ResponseEntity<>(newAgendamento, HttpStatus.CREATED);
 	}
 	@GetMapping
-	public ResponseEntity<List<AgendamentoDTO>> getAgendamentos() {
-		List<AgendamentoDTO> agendamentos = agendamentoService.findAll();
+	public ResponseEntity<List<AgendamentoListDTO>> getAgendamentos() {
+		List<AgendamentoListDTO> agendamentos = agendamentoService.findAll();
 		return new ResponseEntity<>(agendamentos, HttpStatus.OK);
 	}
 	

@@ -40,11 +40,22 @@ public class AgendamentoService {
 	@Autowired
 	private StatusRepository statusRepository;
 
-	public List<AgendamentoDTO> findAll() {
+	public List<AgendamentoListDTO> findAll() {
 		List<Agendamento> agendamentos = repository.findAll();
 		return agendamentos.stream()
-				.map(this::convertToDTO)
+				.map(this::convertToListDTO)
 				.collect(Collectors.toList());
+	}
+
+	private AgendamentoListDTO convertToListDTO(Agendamento agendamento) {
+		AgendamentoListDTO listDTO = new AgendamentoListDTO();
+	
+		listDTO.setId(agendamento.getId());
+		listDTO.setBarbeiroId(agendamento.getBarbeiro().getId());
+		listDTO.setBarbeiroNome(agendamento.getBarbeiro().getNome());
+		listDTO.setAgendamentos(Arrays.asList(convertToDTO(agendamento)));
+	
+		return listDTO;
 	}
 
 	public Agendamento findById(long id) {
@@ -78,6 +89,7 @@ public class AgendamentoService {
 
 	private AgendamentoDTO convertToDTO(Agendamento agendamento) {
 		AgendamentoDTO dto = new AgendamentoDTO();
+		
 
 		dto.setBarbeiroId(agendamento.getBarbeiro().getId());
 		dto.setBarbeiroNome(agendamento.getBarbeiro().getNome());

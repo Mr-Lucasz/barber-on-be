@@ -18,11 +18,11 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class AgendamentoDTO {
-	  private Long id;
-	    private Date horaInicio;
-	    private Date horaFim;
-	    private Servico servicoId;
-	    private Barbeiro barbeiroId;
-	    private Cliente clienteId;
-	    private Status statusId;
+    private Long barbeiroId;
+    private String barbeiroNome;
+    private Date horaInicio;
+    private Date horaFim;
+    private ServicoDTO servico;
+    private ClienteDTO cliente;
+    private StatusDTO status;
 }

@@ -45,6 +45,10 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
+    public Agenda getAgendaById(Long agendaId) {
+        return findAgendaById(agendaId);
+    }
+
     public List<Agenda> getAgendasByBarbeiro(Long barbeiroId) {
         Barbeiro barbeiro = findBarbeiroById(barbeiroId);
         return agendaRepository.findByBarbeiro(barbeiro);

@@ -1,38 +1,35 @@
 package barberon.barberonbe.model;
 
-import java.util.Date; 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @Entity
-@Table(name = "cliente")
+@Table(name = "usuario")
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@EqualsAndHashCode(callSuper = false, of = "id")
-
-public class Cliente extends Usuario {
-
-    @Column(nullable = false)
-    private Date dataNascimento;
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class Usuario {
+    @Id
+    @GeneratedValue(strategy = GenerationType.TABLE)
+    private Long id;
 
     @Column(nullable = false)
-    private String cpf;
+    @NotBlank(message = "Nome é obrigatório")
+    private String nome;
 
     @Column(nullable = false)
-    private String telefone;
+    @NotBlank(message = "Email é obrigatório")
+    private String email;
 
+    @Column(nullable = false)
+    private String senha;
 }
-

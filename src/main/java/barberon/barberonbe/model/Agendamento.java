@@ -12,6 +12,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -41,9 +43,12 @@ public class Agendamento {
 	@Column(nullable = false)
 	private Date horaFim;
 
-	@ManyToOne
-	@JoinColumn(name = "servico_id", nullable = false)
-	private Servico servico;
+	@ManyToMany
+    @JoinTable(
+      name = "agendamento_servico", 
+      joinColumns = @JoinColumn(name = "agendamento_id"), 
+      inverseJoinColumns = @JoinColumn(name = "servico_id"))
+    private List<Servico> servicos;
 
 	@ManyToOne
 	@JoinColumn(name = "cliente_id", nullable = false)

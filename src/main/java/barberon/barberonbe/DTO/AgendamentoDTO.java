@@ -1,6 +1,7 @@
 package barberon.barberonbe.DTO;
 
 import java.sql.Date;
+import java.util.List;
 
 import barberon.barberonbe.model.Barbeiro;
 import barberon.barberonbe.model.Cliente;
@@ -22,7 +23,7 @@ public class AgendamentoDTO {
     private String barbeiroNome;
     private Date horaInicio;
     private Date horaFim;
-    private ServicoDTO servico;
+    private List<ServicoDTO> servicos;
     private ClienteDTO cliente;
     private StatusDTO status;
 }

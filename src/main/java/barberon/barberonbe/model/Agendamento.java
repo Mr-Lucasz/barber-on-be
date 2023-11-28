@@ -26,32 +26,30 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "agendamento")
-
 public class Agendamento {
-	 @Id
-	    @GeneratedValue(strategy = GenerationType.AUTO)
-	    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Long id;
 
-	    @ManyToOne
-	    @JoinColumn(name = "barbeiro_id", nullable = false)
-	    private Barbeiro barbeiro;
+	@ManyToOne
+	@JoinColumn(name = "barbeiro_id", nullable = false)
+	private Barbeiro barbeiro;
 
-	    @Column(nullable = false)
-	    private Date horaInicio;
+	@Column(nullable = false)
+	private Date horaInicio;
 
-	    @Column(nullable = false)
-	    private Date horaFim;
+	@Column(nullable = false)
+	private Date horaFim;
 
-	    @ManyToOne
-	    @JoinColumn(name = "servico_id", nullable = false)
-	    private Servico servico;
+	@ManyToOne
+	@JoinColumn(name = "servico_id", nullable = false)
+	private Servico servico;
 
-	    @ManyToOne
-	    @JoinColumn(name = "cliente_id", nullable = false)
-	    private Cliente cliente;
+	@ManyToOne
+	@JoinColumn(name = "cliente_id", nullable = false)
+	private Cliente cliente;
 
-	    @ManyToOne
-	    @JoinColumn(name = "status_id", nullable = false)
-	    private Status status;
-
+	@ManyToOne
+	@JoinColumn(name = "status_id", nullable = false)
+	private Status status;
 }

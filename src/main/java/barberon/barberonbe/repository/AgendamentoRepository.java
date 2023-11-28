@@ -1,6 +1,7 @@
 package barberon.barberonbe.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import barberon.barberonbe.DTO.RelatorioDTO;
@@ -14,6 +15,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
            "FROM Agendamento a " +
            "JOIN Barbeiro b ON a.agendamentoBarbeiroID = b.barbeiroID " +
            "JOIN Servico s ON a.agendamentoServicoID = s.servicoID")
-    List<RelatorioDTO> buscarRelatorio();
-
+    List<RelatorioDTO> findAllRelatorio();
 }

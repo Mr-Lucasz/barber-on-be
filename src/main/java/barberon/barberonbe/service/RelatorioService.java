@@ -12,6 +12,6 @@ public class RelatorioService {
     private AgendamentoRepository repository;
 
     public List<RelatorioDTO> buscarRelatorio() {
-        return repository.buscarRelatorio();
+        return repository.findAllRelatorio();
     }
 }

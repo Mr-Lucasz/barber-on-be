@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
+import org.springframework.stereotype.Service;
 
 import barberon.barberonbe.DTO.CupomDTO;
 import barberon.barberonbe.model.Cupom;
 import barberon.barberonbe.repository.CupomRepository;
 
+@Service
 public class CupomService {
 
 	@Autowired

@@ -72,7 +72,9 @@ public class AgendamentoService {
 		agendamento.setBarbeiro(barbeiroRepository.findById(agendamentoDTO.getBarbeiroId()).orElse(null));
 		agendamento.setHoraInicio(agendamentoDTO.getHoraInicio());
 		agendamento.setHoraFim(agendamentoDTO.getHoraFim());
-		agendamento.setServico(servicoRepository.findById(agendamentoDTO.getServico().getServicoId()).orElse(null));
+		agendamento.setServicos(agendamentoDTO.getServicos().stream()
+		.map(servicoDTO -> servicoRepository.findById(servicoDTO.getServicoId()).orElse(null))
+		.collect(Collectors.toList()));
 		agendamento.setCliente(clienteRepository.findById(agendamentoDTO.getCliente().getId()).orElse(null));
 		agendamento.setStatus(statusRepository.findById(agendamentoDTO.getStatus().getId()).orElse(null));
 
@@ -95,7 +97,9 @@ public class AgendamentoService {
 		dto.setBarbeiroNome(agendamento.getBarbeiro().getNome());
 		dto.setHoraInicio(agendamento.getHoraInicio());
 		dto.setHoraFim(agendamento.getHoraFim());
-		dto.setServico(convertToServicoDTO(agendamento.getServico()));
+		dto.setServicos(agendamento.getServicos().stream()
+		.map(this::convertToServicoDTO)
+		.collect(Collectors.toList()));
 		dto.setCliente(convertToClienteDTO(agendamento.getCliente()));
 		dto.setStatus(convertToStatusDTO(agendamento.getStatus()));
 
@@ -135,17 +139,16 @@ public class AgendamentoService {
 
 	public AgendamentoDTO update(Long id, Agendamento agendamentoAtualizado) {
 		Agendamento existingAgendamento = repository.findById(id)
-				.orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado com o ID: " + id));
+		.orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado com o ID: " + id));
 
 		existingAgendamento.setBarbeiro(agendamentoAtualizado.getBarbeiro());
 		existingAgendamento.setHoraInicio(agendamentoAtualizado.getHoraInicio());
 		existingAgendamento.setHoraFim(agendamentoAtualizado.getHoraFim());
-		existingAgendamento.setServico(agendamentoAtualizado.getServico());
+		existingAgendamento.setServicos(agendamentoAtualizado.getServicos());
 		existingAgendamento.setCliente(agendamentoAtualizado.getCliente());
 		existingAgendamento.setStatus(agendamentoAtualizado.getStatus());
 
 		Agendamento updatedAgendamento = repository.save(existingAgendamento);
-
 		return convertToDTO(updatedAgendamento);
 	}
 }

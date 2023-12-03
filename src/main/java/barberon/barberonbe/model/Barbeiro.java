@@ -55,5 +55,8 @@ public class Barbeiro extends Usuario {
     @OneToOne(mappedBy = "barbeiro", cascade = CascadeType.ALL, fetch = FetchType.LAZY, optional = true)
     private Imagem imagem;
 
+    @OneToMany(mappedBy = "barbeiro")
+    private List<Agendamento> agendamentos;
+
 
 }

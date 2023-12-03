@@ -12,14 +12,12 @@ import lombok.Setter;
 @NoArgsConstructor
 
 public class ClienteDTO {
-	 private Long id;
-	    private Long barbeariaId;
-	    private String nome;
-	    private Date dataNascimento;
-	    private String cpf;
-	    private String telefone;
-	    private String email;
-	    private String senha;
-	    private Double mediaAvaliacao;
-	    private Long imagemId;
+	private Long id;
+	private String nome;
+	private Date dataNascimento;
+	private String cpf;
+	private String telefone;
+	private String email;
+	private String senha;
+	private Long imagemId;
 }

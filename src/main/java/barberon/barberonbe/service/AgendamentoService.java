@@ -3,7 +3,8 @@ package barberon.barberonbe.service;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.stereotype.Service;
@@ -25,130 +26,154 @@ import barberon.barberonbe.repository.StatusRepository;
 
 @Service
 public class AgendamentoService {
-	@Autowired
-	private AgendamentoRepository repository;
 
-	@Autowired
-	private BarbeiroRepository barbeiroRepository;
+	private static final Logger logger = LoggerFactory.getLogger(AgendamentoService.class);
 
-	@Autowired
-	private ServicoRepository servicoRepository;
+    @Autowired
+    private AgendamentoRepository repository;
 
-	@Autowired
-	private ClienteRepository clienteRepository;
+    @Autowired
+    private BarbeiroRepository barbeiroRepository;
 
-	@Autowired
-	private StatusRepository statusRepository;
+    @Autowired
+    private ServicoRepository servicoRepository;
 
-	public List<AgendamentoListDTO> findAll() {
-		List<Agendamento> agendamentos = repository.findAll();
-		return agendamentos.stream()
-				.map(this::convertToListDTO)
-				.collect(Collectors.toList());
-	}
+    @Autowired
+    private ClienteRepository clienteRepository;
 
-	private AgendamentoListDTO convertToListDTO(Agendamento agendamento) {
-		AgendamentoListDTO listDTO = new AgendamentoListDTO();
-	
-		listDTO.setId(agendamento.getId());
-		listDTO.setBarbeiroId(agendamento.getBarbeiro().getId());
-		listDTO.setBarbeiroNome(agendamento.getBarbeiro().getNome());
-		listDTO.setAgendamentos(Arrays.asList(convertToDTO(agendamento)));
-	
-		return listDTO;
-	}
+    @Autowired
+    private StatusRepository statusRepository;
 
-	public Agendamento findById(long id) {
-		return repository.findById(id).orElse(null);
-	}
+public List<AgendamentoListDTO> findAll() {
+    List<Agendamento> agendamentos = repository.findAll();
+    logger.debug("Todos os agendamentos recuperados: {}", agendamentos);
+    List<AgendamentoListDTO> agendamentoListDTOs = agendamentos.stream()
+            .map(this::convertToListDTO)
+            .collect(Collectors.toList());
+    logger.debug("Agendamentos convertidos para DTOs: {}", agendamentoListDTOs);
+    return agendamentoListDTOs;
+}
 
-	public void deleteById(long id) {
-		repository.deleteById(id);
-	}
+    // Adicione os seguintes métodos
+    public List<AgendamentoListDTO> findAllByClienteId(Long clienteId) {
+        List<Agendamento> agendamentos = repository.findByClienteId(clienteId);
+        return agendamentos.stream()
+                .map(this::convertToListDTO)
+                .collect(Collectors.toList());
+    }
 
-	public AgendamentoListDTO save(AgendamentoDTO agendamentoDTO) {
-		Agendamento agendamento = new Agendamento();
+    public List<AgendamentoListDTO> findAllByBarbeiroId(Long barbeiroId) {
+        List<Agendamento> agendamentos = repository.findByBarbeiroId(barbeiroId);
+        return agendamentos.stream()
+                .map(this::convertToListDTO)
+                .collect(Collectors.toList());
+    }
 
-		agendamento.setBarbeiro(barbeiroRepository.findById(agendamentoDTO.getBarbeiroId()).orElse(null));
-		agendamento.setHoraInicio(agendamentoDTO.getHoraInicio());
-		agendamento.setHoraFim(agendamentoDTO.getHoraFim());
-		agendamento.setServicos(agendamentoDTO.getServicos().stream()
-		.map(servicoDTO -> servicoRepository.findById(servicoDTO.getServicoId()).orElse(null))
-		.collect(Collectors.toList()));
-		agendamento.setCliente(clienteRepository.findById(agendamentoDTO.getCliente().getId()).orElse(null));
-		agendamento.setStatus(statusRepository.findById(agendamentoDTO.getStatus().getId()).orElse(null));
+    private AgendamentoListDTO convertToListDTO(Agendamento agendamento) {
+        AgendamentoListDTO listDTO = new AgendamentoListDTO();
+    
+        listDTO.setId(agendamento.getId());
+        listDTO.setBarbeiroId(agendamento.getBarbeiro().getId());
+        listDTO.setBarbeiroNome(agendamento.getBarbeiro().getNome());
+        listDTO.setAgendamentos(Arrays.asList(convertToDTO(agendamento)));
+    
+        return listDTO;
+    }
 
-		Agendamento savedAgendamento = repository.save(agendamento);
+    public Agendamento findById(long id) {
+        return repository.findById(id).orElse(null);
+    }
 
-		AgendamentoListDTO responseDTO = new AgendamentoListDTO();
-		responseDTO.setId(savedAgendamento.getId());
-		responseDTO.setBarbeiroId(savedAgendamento.getBarbeiro().getId());
-		responseDTO.setBarbeiroNome(savedAgendamento.getBarbeiro().getNome());
-		responseDTO.setAgendamentos(Arrays.asList(convertToDTO(savedAgendamento)));
+    public void deleteById(long id) {
+        repository.deleteById(id);
+    }
 
-		return responseDTO;
-	}
+    public AgendamentoListDTO save(AgendamentoDTO agendamentoDTO) {
+        Agendamento agendamento = new Agendamento();
 
-	private AgendamentoDTO convertToDTO(Agendamento agendamento) {
-		AgendamentoDTO dto = new AgendamentoDTO();
-		
+        agendamento.setBarbeiro(barbeiroRepository.findById(agendamentoDTO.getBarbeiroId()).orElse(null));
+        agendamento.setHoraInicio(agendamentoDTO.getHoraInicio());
+        agendamento.setHoraFim(agendamentoDTO.getHoraFim());
+        agendamento.setServicos(agendamentoDTO.getServicos().stream()
+        .map(servicoDTO -> servicoRepository.findById(servicoDTO.getServicoId()).orElse(null))
+        .collect(Collectors.toList()));
+        agendamento.setCliente(clienteRepository.findById(agendamentoDTO.getCliente().getId()).orElse(null));
+        agendamento.setStatus(statusRepository.findById(agendamentoDTO.getStatus().getId()).orElse(null));
 
-		dto.setBarbeiroId(agendamento.getBarbeiro().getId());
-		dto.setBarbeiroNome(agendamento.getBarbeiro().getNome());
-		dto.setHoraInicio(agendamento.getHoraInicio());
-		dto.setHoraFim(agendamento.getHoraFim());
-		dto.setServicos(agendamento.getServicos().stream()
-		.map(this::convertToServicoDTO)
-		.collect(Collectors.toList()));
-		dto.setCliente(convertToClienteDTO(agendamento.getCliente()));
-		dto.setStatus(convertToStatusDTO(agendamento.getStatus()));
+        Agendamento savedAgendamento = repository.save(agendamento);
 
-		return dto;
-	}
+        AgendamentoListDTO responseDTO = new AgendamentoListDTO();
+        responseDTO.setId(savedAgendamento.getId());
+        responseDTO.setBarbeiroId(savedAgendamento.getBarbeiro().getId());
+        responseDTO.setBarbeiroNome(savedAgendamento.getBarbeiro().getNome());
+        responseDTO.setAgendamentos(Arrays.asList(convertToDTO(savedAgendamento)));
 
-	private ServicoDTO convertToServicoDTO(Servico servico) {
-		ServicoDTO dto = new ServicoDTO();
+        return responseDTO;
+    }
 
-		dto.setServicoId(servico.getServicoId());
-		dto.setServicoTitulo(servico.getServicoTitulo());
-		dto.setServicoDescricao(servico.getServicoDescricao());
-		dto.setServicoValor(servico.getServicoValor());
+    private AgendamentoDTO convertToDTO(Agendamento agendamento) {
 
-		return dto;
-	}
+        logger.debug("Convertendo agendamento: {}", agendamento);
+        logger.debug("Cliente do agendamento: {}", agendamento.getCliente());
+        logger.debug("Barbeiro do agendamento: {}", agendamento.getBarbeiro());
+        AgendamentoDTO dto = new AgendamentoDTO();
 
-	private ClienteDTO convertToClienteDTO(Cliente cliente) {
-		ClienteDTO dto = new ClienteDTO();
+        dto.setBarbeiroId(agendamento.getBarbeiro().getId());
+        dto.setBarbeiroNome(agendamento.getBarbeiro().getNome());
+        dto.setHoraInicio(agendamento.getHoraInicio());
+        dto.setHoraFim(agendamento.getHoraFim());
+        dto.setServicos(agendamento.getServicos().stream()
+        .map(this::convertToServicoDTO)
+        .collect(Collectors.toList()));
+        dto.setCliente(convertToClienteDTO(agendamento.getCliente()));
+        dto.setStatus(convertToStatusDTO(agendamento.getStatus()));
 
-		dto.setId(cliente.getId());
-		dto.setNome(cliente.getNome());
-		dto.setTelefone(cliente.getTelefone());
-		dto.setEmail(cliente.getEmail());
+        return dto;
+    }
 
-		return dto;
-	}
+    private ServicoDTO convertToServicoDTO(Servico servico) {
+        ServicoDTO dto = new ServicoDTO();
 
-	private StatusDTO convertToStatusDTO(Status status) {
-		StatusDTO dto = new StatusDTO();
+        dto.setServicoId(servico.getServicoId());
+        dto.setServicoTitulo(servico.getServicoTitulo());
+        dto.setServicoDescricao(servico.getServicoDescricao());
+        dto.setServicoValor(servico.getServicoValor());
 
-		dto.setId(status.getId());
-		dto.setStatusNome(status.getStatusNome());
+        return dto;
+    }
 
-		return dto;
-	}
+    private ClienteDTO convertToClienteDTO(Cliente cliente) {
+        ClienteDTO dto = new ClienteDTO();
 
-	public AgendamentoDTO update(Long id, Agendamento agendamentoAtualizado) {
-		Agendamento existingAgendamento = repository.findById(id)
-		.orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado com o ID: " + id));
+        dto.setId(cliente.getId());
+        dto.setNome(cliente.getNome());
+        dto.setTelefone(cliente.getTelefone());
+        dto.setEmail(cliente.getEmail());
 
-		existingAgendamento.setBarbeiro(agendamentoAtualizado.getBarbeiro());
-		existingAgendamento.setHoraInicio(agendamentoAtualizado.getHoraInicio());
-		existingAgendamento.setHoraFim(agendamentoAtualizado.getHoraFim());
-		existingAgendamento.setServicos(agendamentoAtualizado.getServicos());
-		existingAgendamento.setCliente(agendamentoAtualizado.getCliente());
-		existingAgendamento.setStatus(agendamentoAtualizado.getStatus());
+        return dto;
+    }
 
-		Agendamento updatedAgendamento = repository.save(existingAgendamento);
-		return convertToDTO(updatedAgendamento);
-	}
+    private StatusDTO convertToStatusDTO(Status status) {
+        StatusDTO dto = new StatusDTO();
+
+        dto.setId(status.getId());
+        dto.setStatusNome(status.getStatusNome());
+
+        return dto;
+    }
+
+    public AgendamentoDTO update(Long id, Agendamento agendamentoAtualizado) {
+        Agendamento existingAgendamento = repository.findById(id)
+        .orElseThrow(() -> new ResourceNotFoundException("Agendamento não encontrado com o ID: " + id));
+
+        existingAgendamento.setBarbeiro(agendamentoAtualizado.getBarbeiro());
+        existingAgendamento.setHoraInicio(agendamentoAtualizado.getHoraInicio());
+        existingAgendamento.setHoraFim(agendamentoAtualizado.getHoraFim());
+        existingAgendamento.setServicos(agendamentoAtualizado.getServicos());
+        existingAgendamento.setCliente(agendamentoAtualizado.getCliente());
+        existingAgendamento.setStatus(agendamentoAtualizado.getStatus());
+
+        Agendamento updatedAgendamento = repository.save(existingAgendamento);
+        return convertToDTO(updatedAgendamento);
+    }
 }

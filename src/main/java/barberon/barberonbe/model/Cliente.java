@@ -1,13 +1,12 @@
 package barberon.barberonbe.model;
 
-import java.util.Date; 
+import java.util.Date;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -34,5 +33,7 @@ public class Cliente extends Usuario {
     @Column(nullable = false)
     private String telefone;
 
+       @OneToMany(mappedBy = "cliente")
+    private List<Agendamento> agendamentos;
 }
 

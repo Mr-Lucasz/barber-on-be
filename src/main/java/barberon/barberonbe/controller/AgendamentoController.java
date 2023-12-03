@@ -33,13 +33,24 @@ public class AgendamentoController {
 	public ResponseEntity<AgendamentoListDTO> createAgendamento(@RequestBody AgendamentoDTO agendamentoDTO) {
 		AgendamentoListDTO newAgendamento = agendamentoService.save(agendamentoDTO);
 		return new ResponseEntity<>(newAgendamento, HttpStatus.CREATED);
+
 	}
+
 	@GetMapping
-	public ResponseEntity<List<AgendamentoListDTO>> getAgendamentos() {
-		List<AgendamentoListDTO> agendamentos = agendamentoService.findAll();
-		return new ResponseEntity<>(agendamentos, HttpStatus.OK);
+	public List<AgendamentoListDTO> getAllAgendamentos() {
+		return agendamentoService.findAll();
 	}
-	
+
+	@GetMapping("/cliente/{clienteId}")
+	public List<AgendamentoListDTO> getAllAgendamentosByClienteId(@PathVariable Long clienteId) {
+		return agendamentoService.findAllByClienteId(clienteId);
+	}
+
+	@GetMapping("/barbeiro/{barbeiroId}")
+	public List<AgendamentoListDTO> getAllAgendamentosByBarbeiroId(@PathVariable Long barbeiroId) {
+		return agendamentoService.findAllByBarbeiroId(barbeiroId);
+	}
+
 	@GetMapping("/{id}")
 	public ResponseEntity<Agendamento> getAgendamento(@PathVariable Long id) {
 		Agendamento agendamento = agendamentoService.findById(id);
